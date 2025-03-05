@@ -2,13 +2,29 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+#Ensures RoR2 assemblies are not redistributed accidentally
+PonePack/[Pp]ackages/[Rr]isk of Rain 2/*.dll
+PonePack/[Pp]ackages/[Rr]isk of Rain 2/[Pp]lugins/*.dll
+
+#Client side only thunderkit related files.
+PonePack/Assets/ThunderKitSettings/EditorInspectorSettings.asset
+PonePack/Assets/ThunderKitSettings/RoR2.asset
+PonePack/Assets/ThunderKitSettings/Logs/*
+PonePack/Assets/ThunderKitSettings/ThunderKit Extensions.asset
+PonePack/ThunderKit/
+
+#Ensures mod dependencies such as R2API and others are not explicitly added to the github repository to avoid unecesary redistribution
+SS2-Project/Packages/*
+!SS2-Project/Packages/packages-lock.json
+!SS2-Project/Packages/manifest.json
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
