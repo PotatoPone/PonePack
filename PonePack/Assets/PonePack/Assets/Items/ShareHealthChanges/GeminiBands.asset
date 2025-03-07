@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: GeminiBands
+  m_EditorClassIdentifier: 
+  deprecatedTier: 3
+  _itemTierDef: {fileID: 0}
+  nameToken: Gemini Bands
+  pickupToken: Share your healing AND damage received with nearby allies
+  descriptionToken: 
+  loreToken: 
+  unlockableDef: {fileID: 0}
+  pickupModelPrefab: {fileID: 6022484825375666754, guid: 12bdc1fbd8bc2e547a5f772bf62fb59e, type: 3}
+  pickupIconSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  isConsumed: 0
+  hidden: 0
+  canRemove: 1
+  tags: 00000000
+  requiredExpansion: {fileID: 0}

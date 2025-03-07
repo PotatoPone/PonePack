@@ -1,0 +1,54 @@
+ManifestFileVersion: 0
+CRC: 2913610090
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 94861567b04276850cbda0dbd2c915c9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d60e3635b1335f13b66090438e7c16b3
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+- Class: 114
+  Script: {fileID: -1783169300, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e0d71a06c633ec94c9ee3f3d2f273939, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: com.unity.multiplayer-hlapi.Runtime
+  ClassName: UnityEngine.Networking.NetworkHash128
+- AssemblyName: com.unity.multiplayer-hlapi.Runtime
+  ClassName: UnityEngine.Networking.NetworkSceneId
+Assets:
+- Assets/PonePack/Assets/Items/ShareHealthChanges/GeminiBands.asset
+- Assets/PonePack/Assets/Items/ShareHealthChanges/Cube.prefab
+- Assets/PonePack/Assets/Items/ShareHealthChanges/ShareHealthChangesBonusIndicator.prefab
+- Assets/PonePack/Assets/Buffs/ShareHealthChangesWithNearbyAlliesBuff.asset
+Dependencies: []
