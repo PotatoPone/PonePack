@@ -6,9 +6,34 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
+using MonoMod.RuntimeDetour.HookGen;
+using BepInEx;
 
 namespace PonePack
 {
+    //public class TestClass : BaseUnityPlugin
+    //{
+    //    // Somewhere in your BaseUnityPlugin class
+    //    private void OnEnable()
+    //    {
+    //        On.RoR2.RoR2Application.Awake += OnRoR2ApplicationAwake;
+    //    }
+
+    //    private void OnDisable()
+    //    {
+    //        On.RoR2.RoR2Application.Awake -= OnRoR2ApplicationAwake;
+    //    }
+
+    //    private static void OnRoR2ApplicationAwake(On.RoR2.RoR2Application.orig_Awake orig, RoR2Application self)
+    //    {
+    //        // code that will run before the original method
+
+    //        orig(self);
+
+    //        // code that will run after the original method
+    //    }
+    //}
+
     public class ShareHealthChangesWithNearbyAllies : MonoBehaviour
     {
         private int charactersInRange;
