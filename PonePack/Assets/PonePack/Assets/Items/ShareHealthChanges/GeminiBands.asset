@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deprecatedTier: 3
   _itemTierDef: {fileID: 0}
-  nameToken: Gemini Bands
+  nameToken: The New Item
   pickupToken: Share your healing AND damage received with nearby allies
   descriptionToken: 
   loreToken: 

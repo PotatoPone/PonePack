@@ -35,9 +35,6 @@ namespace PonePack
         private void Start()
         {
             this.networkedBodyAttachment = GetComponent<NetworkedBodyAttachment>();
-
-            Debug.Log("networkedBodyAttachment: " + this.networkedBodyAttachment);
-
             this.body = this.networkedBodyAttachment.attachedBody; //Obj ref not set to instance
             bool active = NetworkServer.active;
             if (!active)
@@ -61,6 +58,7 @@ namespace PonePack
             this.UpdateValues(this.body.inventory.GetItemCount(PonePack.Items.ShareHealthChangesWithNearbyAllies), out indicatorDiameter);
 
             this.SetIndicatorDiameter(indicatorDiameter);
+
         }
 
         private void Update()
@@ -116,8 +114,8 @@ namespace PonePack
             {
                 return;
             }
-            CharacterBody enemyBody;
-            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out enemyBody) && this.CharacterBodyCountsTowardBuff(enemyBody))
+            CharacterBody otherBody;
+            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
             {
                 this.charactersInRange++;
                 if (this.charactersInRange <= this.maxCharacterCount)
@@ -135,8 +133,8 @@ namespace PonePack
             {
                 return;
             }
-            CharacterBody enemyBody;
-            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out enemyBody) && this.CharacterBodyCountsTowardBuff(enemyBody))
+            CharacterBody otherBody;
+            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
             {
                 if (this.charactersInRange <= this.maxCharacterCount)
                 {
@@ -149,12 +147,15 @@ namespace PonePack
 
         private bool TryUpdateCharactersInRange(float radius)
         {
+            TeamMask mask = default(TeamMask);
+            mask.AddTeam(TeamIndex.Player);
             List<HurtBox> list = CollectionPool<HurtBox, List<HurtBox>>.RentCollection();
             SphereSearch sphereSearch = new SphereSearch();
             sphereSearch.mask = LayerIndex.entityPrecise.mask;
             sphereSearch.origin = base.transform.position;
             sphereSearch.radius = radius;
             sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
+            sphereSearch.FilterCandidatesByHurtBoxTeam(mask);
             sphereSearch.RefreshCandidates();
             sphereSearch.OrderCandidatesByDistance();
             sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
@@ -202,9 +203,9 @@ namespace PonePack
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool CharacterBodyCountsTowardBuff(CharacterBody enemyBody)
+        private bool CharacterBodyCountsTowardBuff(CharacterBody otherBody)
         {
-            return enemyBody != this.body && enemyBody.healthComponent != null && enemyBody.healthComponent.alive;
+            return otherBody != this.body && otherBody.healthComponent != null && otherBody.healthComponent.alive;
         }
 
         private void OnDisable()
