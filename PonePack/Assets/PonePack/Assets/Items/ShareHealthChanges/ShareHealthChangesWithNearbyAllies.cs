@@ -59,6 +59,7 @@ namespace PonePack
 
         private void Start()
         {
+            this.hurtBoxesInRange = new List<HurtBox>();
             this.networkedBodyAttachment = GetComponent<NetworkedBodyAttachment>();
             this.body = this.networkedBodyAttachment.attachedBody; //Obj ref not set to instance
             bool active = NetworkServer.active;
@@ -196,7 +197,6 @@ namespace PonePack
                 this.charactersInRange++;
                 if (this.charactersInRange <= this.maxCharacterCount)
                 {
-                    Debug.Log("A valid character has entered range!");
                     this.body.AddBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
                 }
                 this.timer = this.syncInterval;

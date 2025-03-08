@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1633863852
+CRC: 1338479019
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3a7b1ef94bf8c965a4ddc21a97bce8c8
+    Hash: 9db9718ffe08cd0258ad3f37f5052262
   TypeTreeHash:
     serializedVersion: 2
     Hash: d60e3635b1335f13b66090438e7c16b3
@@ -47,6 +47,7 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: com.unity.multiplayer-hlapi.Runtime
   ClassName: UnityEngine.Networking.NetworkSceneId
 Assets:
+- Assets/PonePack/Assets/Items/ShareHealthChanges/ShareHealthChangesRangeIndicatorMaterial.mat
 - Assets/PonePack/Assets/Items/ShareHealthChanges/GeminiBands.asset
 - Assets/PonePack/Assets/Items/ShareHealthChanges/Cube.prefab
 - Assets/PonePack/Assets/Items/ShareHealthChanges/ShareHealthChangesBonusIndicator.prefab
