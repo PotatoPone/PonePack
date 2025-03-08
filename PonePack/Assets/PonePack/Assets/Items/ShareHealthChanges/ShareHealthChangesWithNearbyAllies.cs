@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
-using MonoMod.RuntimeDetour.HookGen;
 using BepInEx;
 
 namespace PonePack
@@ -37,7 +36,8 @@ namespace PonePack
     public class ShareHealthChangesWithNearbyAllies : MonoBehaviour
     {
         private int charactersInRange;
-        private int maxCharacterCount;
+        private int maxCharacterCount; //Unneeded
+        private List<HurtBox> hurtBoxesInRange;
 
         [SerializeField]
         public SphereCollider sphereCollider;
@@ -86,6 +86,34 @@ namespace PonePack
 
         }
 
+        private void OnEnable()
+        {
+            On.RoR2.HealthComponent.Heal += HealAllies;
+        }
+
+        private void OnDisable()
+        {
+            On.RoR2.HealthComponent.Heal -= HealAllies;
+
+            if (this.body)
+            {
+                if (NetworkServer.active)
+                {
+                    this.body.onInventoryChanged -= this.ServerUpdateValuesFromInventory;
+                    if (this.body.HasBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff))
+                    {
+                        this.body.SetBuffCount(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex, 0);
+                        return;
+                    }
+                }
+                else
+                {
+                    CharacterBody characterBody = this.body;
+                    characterBody.OnNetworkItemBehaviorUpdate = (Action<CharacterBody.NetworkItemBehaviorData>)Delegate.Remove(characterBody.OnNetworkItemBehaviorUpdate, new Action<CharacterBody.NetworkItemBehaviorData>(this.HandleNetworkItemUpdateClient));
+                }
+            }
+        }
+
         private void Update()
         {
             if (!NetworkServer.active)
@@ -100,6 +128,29 @@ namespace PonePack
             this.timer = this.syncInterval;
             this.TryUpdateCharactersInRange(this.sphereCollider.radius);
             this.ReconcileBuffCount();
+        }
+
+        private float HealAllies(On.RoR2.HealthComponent.orig_Heal orig, HealthComponent self, float amount, ProcChainMask procChainMask, bool nonRegen)
+        {
+            Debug.Log("HealAllies was called!");
+
+
+            // code that will run before the original method
+
+            orig(self, amount, procChainMask, nonRegen);
+
+            // code that will run after the original method
+
+            // For testing, only heal allies if the healing source is NOT regen
+            if (nonRegen == true)
+            {
+                foreach (HurtBox hurtBox in hurtBoxesInRange)
+                {
+                    hurtBox.healthComponent.Heal(amount, procChainMask, true);
+                }
+            }
+
+            return amount;
         }
 
         private void HandleNetworkItemUpdateClient(CharacterBody.NetworkItemBehaviorData itemBehaviorData)
@@ -193,6 +244,7 @@ namespace PonePack
                 if (!(hurtBox.healthComponent == null) && !(hurtBox.healthComponent.body == null) && this.CharacterBodyCountsTowardBuff(hurtBox.healthComponent.body))
                 {
                     num++;
+                    hurtBoxesInRange.Add(hurtBox);
                 }
             }
             CollectionPool<HurtBox, List<HurtBox>>.ReturnCollection(list);
@@ -231,27 +283,6 @@ namespace PonePack
         private bool CharacterBodyCountsTowardBuff(CharacterBody otherBody)
         {
             return otherBody != this.body && otherBody.healthComponent != null && otherBody.healthComponent.alive;
-        }
-
-        private void OnDisable()
-        {
-            if (this.body)
-            {
-                if (NetworkServer.active)
-                {
-                    this.body.onInventoryChanged -= this.ServerUpdateValuesFromInventory;
-                    if (this.body.HasBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff))
-                    {
-                        this.body.SetBuffCount(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex, 0);
-                        return;
-                    }
-                }
-                else
-                {
-                    CharacterBody characterBody = this.body;
-                    characterBody.OnNetworkItemBehaviorUpdate = (Action<CharacterBody.NetworkItemBehaviorData>)Delegate.Remove(characterBody.OnNetworkItemBehaviorUpdate, new Action<CharacterBody.NetworkItemBehaviorData>(this.HandleNetworkItemUpdateClient));
-                }
-            }
         }
     }
 }
