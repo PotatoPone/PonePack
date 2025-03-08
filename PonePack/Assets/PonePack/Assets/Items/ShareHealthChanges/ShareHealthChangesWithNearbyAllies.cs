@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using BepInEx;
+using System.Collections.ObjectModel;
+using R2API;
 
 namespace PonePack
 {
@@ -37,7 +39,7 @@ namespace PonePack
     {
         private int charactersInRange;
         private int maxCharacterCount; //Unneeded
-        private List<HurtBox> hurtBoxesInRange;
+        private float maxRange = 20f;
 
         [SerializeField]
         public SphereCollider sphereCollider;
@@ -59,7 +61,6 @@ namespace PonePack
 
         private void Start()
         {
-            this.hurtBoxesInRange = new List<HurtBox>();
             this.networkedBodyAttachment = GetComponent<NetworkedBodyAttachment>();
             this.body = this.networkedBodyAttachment.attachedBody; //Obj ref not set to instance
             bool active = NetworkServer.active;
@@ -73,10 +74,10 @@ namespace PonePack
                 this.body.onInventoryChanged += this.ServerUpdateValuesFromInventory;
                 this.timer = this.syncInterval;
             }
-            this.TryUpdateCharactersInRange(20f);
+            //this.TryUpdateCharactersInRange(20f);
             if (active)
             {
-                this.ReconcileBuffCount();
+                //this.ReconcileBuffCount();
                 this.ServerUpdateValuesFromInventory();
                 return;
             }
@@ -84,17 +85,18 @@ namespace PonePack
             this.UpdateValues(this.body.inventory.GetItemCount(PonePack.Items.ShareHealthChangesWithNearbyAllies), out indicatorDiameter);
 
             this.SetIndicatorDiameter(indicatorDiameter);
-
         }
 
         private void OnEnable()
         {
             On.RoR2.HealthComponent.Heal += HealAllies;
+            On.RoR2.HealthComponent.TakeDamage += DamageAllies;
         }
 
         private void OnDisable()
         {
             On.RoR2.HealthComponent.Heal -= HealAllies;
+            On.RoR2.HealthComponent.TakeDamage -= DamageAllies;
 
             if (this.body)
             {
@@ -127,31 +129,63 @@ namespace PonePack
                 return;
             }
             this.timer = this.syncInterval;
-            this.TryUpdateCharactersInRange(this.sphereCollider.radius);
-            this.ReconcileBuffCount();
+            //this.TryUpdateCharactersInRange(this.sphereCollider.radius);
+            //this.ReconcileBuffCount();
         }
 
         private float HealAllies(On.RoR2.HealthComponent.orig_Heal orig, HealthComponent self, float amount, ProcChainMask procChainMask, bool nonRegen)
         {
-            Debug.Log("HealAllies was called!");
+            Debug.Log("HealAllies was called");
+
+            //-- code that will run before the original method
+
+            float healAmount = orig(self, amount, procChainMask, nonRegen);
+
+            //-- code that will run after the original method
 
 
-            // code that will run before the original method
-
-            orig(self, amount, procChainMask, nonRegen);
-
-            // code that will run after the original method
-
-            // For testing, only heal allies if the healing source is NOT regen
-            if (nonRegen == true)
+            if (self.body && self.alive && self.body == this.body)
             {
-                foreach (HurtBox hurtBox in hurtBoxesInRange)
+                if (nonRegen == false) return 0; // Do not share healing from regen
+                if (R2API.ProcTypeAPI.HasModdedProc(procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return 0; // Do not heal if this healing was caused by another shareHealth item
+
+                ReadOnlyCollection<TeamComponent> teamComponents = TeamComponent.GetTeamMembers(TeamIndex.Player);
+
+                //Need to check for distance
+                foreach (TeamComponent teamComponent in teamComponents)
                 {
-                    hurtBox.healthComponent.Heal(amount, procChainMask, true);
+                    if (teamComponent.body == this.body) continue;
+                    if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
+
+                    R2API.ProcTypeAPI.AddModdedProc(ref procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
+                    Debug.Log("Healing " + teamComponent.body.name);
+                    teamComponent.body.healthComponent.Heal(healAmount, procChainMask, true);
                 }
             }
 
-            return amount;
+            return healAmount;
+        }
+
+        private void DamageAllies(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
+            orig(self, damageInfo);
+
+            if (self.body && self.alive && self.body == this.body)
+            {
+                if (R2API.ProcTypeAPI.HasModdedProc(damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return; // Do not heal if this healing was caused by another shareHealth item
+
+                ReadOnlyCollection<TeamComponent> teamComponents = TeamComponent.GetTeamMembers(TeamIndex.Player);
+
+                //Need to check for distance
+                foreach (TeamComponent teamComponent in teamComponents)
+                {
+                    if (teamComponent.body == this.body) continue;
+                    if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
+
+                    R2API.ProcTypeAPI.AddModdedProc(ref damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
+                    teamComponent.body.healthComponent.TakeDamage(damageInfo);
+                }
+            }
         }
 
         private void HandleNetworkItemUpdateClient(CharacterBody.NetworkItemBehaviorData itemBehaviorData)
@@ -221,63 +255,62 @@ namespace PonePack
             }
         }
 
-        private bool TryUpdateCharactersInRange(float radius)
-        {
-            TeamMask mask = default(TeamMask);
-            mask.AddTeam(TeamIndex.Player);
-            List<HurtBox> list = CollectionPool<HurtBox, List<HurtBox>>.RentCollection();
-            SphereSearch sphereSearch = new SphereSearch();
-            sphereSearch.mask = LayerIndex.entityPrecise.mask;
-            sphereSearch.origin = base.transform.position;
-            sphereSearch.radius = radius;
-            sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
-            sphereSearch.FilterCandidatesByHurtBoxTeam(mask);
-            sphereSearch.RefreshCandidates();
-            sphereSearch.OrderCandidatesByDistance();
-            sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
-            sphereSearch.GetHurtBoxes(list);
-            sphereSearch.ClearCandidates();
-            int num = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                HurtBox hurtBox = list[i];
-                if (!(hurtBox.healthComponent == null) && !(hurtBox.healthComponent.body == null) && this.CharacterBodyCountsTowardBuff(hurtBox.healthComponent.body))
-                {
-                    num++;
-                    hurtBoxesInRange.Add(hurtBox);
-                }
-            }
-            CollectionPool<HurtBox, List<HurtBox>>.ReturnCollection(list);
-            bool result = num != this.charactersInRange;
-            this.charactersInRange = num;
-            return result;
-        }
+        //private bool TryUpdateCharactersInRange(float radius)
+        //{
+        //    TeamMask mask = default(TeamMask);
+        //    mask.AddTeam(TeamIndex.Player);
+        //    List<HurtBox> list = CollectionPool<HurtBox, List<HurtBox>>.RentCollection();
+        //    SphereSearch sphereSearch = new SphereSearch();
+        //    sphereSearch.mask = LayerIndex.entityPrecise.mask;
+        //    sphereSearch.origin = base.transform.position;
+        //    sphereSearch.radius = radius;
+        //    sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
+        //    sphereSearch.FilterCandidatesByHurtBoxTeam(mask);
+        //    sphereSearch.RefreshCandidates();
+        //    sphereSearch.OrderCandidatesByDistance();
+        //    sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
+        //    sphereSearch.GetHurtBoxes(list);
+        //    sphereSearch.ClearCandidates();
+        //    int num = 0;
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        HurtBox hurtBox = list[i];
+        //        if (!(hurtBox.healthComponent == null) && !(hurtBox.healthComponent.body == null) && this.CharacterBodyCountsTowardBuff(hurtBox.healthComponent.body))
+        //        {
+        //            num++;
+        //        }
+        //    }
+        //    CollectionPool<HurtBox, List<HurtBox>>.ReturnCollection(list);
+        //    bool result = num != this.charactersInRange;
+        //    this.charactersInRange = num;
+        //    return result;
+        //}
 
-        private void ReconcileBuffCount()
-        {
-            if (!NetworkServer.active)
-            {
-                return;
-            }
-            BuffIndex buffIndex = PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex;
-            int num = this.body.GetBuffCount(buffIndex);
-            int num2 = Mathf.Min(this.maxCharacterCount, this.charactersInRange);
-            int num3 = 0;
-            while (num2 != num && num3 < 1000)
-            {
-                num3++;
-                if (num > num2)
-                {
-                    num--;
-                    this.body.RemoveBuff(buffIndex);
-                }
-                else if (num < num2)
-                {
-                    num++;
-                    this.body.AddBuff(buffIndex);
-                }
-            }
-        }
+        //private void ReconcileBuffCount()
+        //{
+        //    if (!NetworkServer.active)
+        //    {
+        //        return;
+        //    }
+        //    BuffIndex buffIndex = PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex;
+        //    int num = this.body.GetBuffCount(buffIndex);
+        //    int num2 = Mathf.Min(this.maxCharacterCount, this.charactersInRange);
+        //    int num3 = 0;
+        //    while (num2 != num && num3 < 1000)
+        //    {
+        //        num3++;
+        //        if (num > num2)
+        //        {
+        //            num--;
+        //            this.body.RemoveBuff(buffIndex);
+        //        }
+        //        else if (num < num2)
+        //        {
+        //            num++;
+        //            this.body.AddBuff(buffIndex);
+        //        }
+        //    }
+        //}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool CharacterBodyCountsTowardBuff(CharacterBody otherBody)

@@ -4,6 +4,7 @@ using RoR2;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using R2API;
 
 namespace PonePack
 {
@@ -20,6 +21,11 @@ namespace PonePack
     public static class ItemObjects
     {
         public static GameObject ShareHealthChangesBonusIndicator;
+    }
+
+    public static class ModdedProcTypes
+    {
+        public static ModdedProcType HealthLink;
     }
 
     public class PonePackContent : IContentPackProvider
@@ -47,6 +53,7 @@ namespace PonePack
 
             LoadItemDefs();
             LoadBuffDefs();
+            LoadProcTypes();
         }
         public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
         {
@@ -56,14 +63,6 @@ namespace PonePack
         }
         public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
         {
-            //R2API.RecalculateStatsAPI.GetStatCoefficients += (body, statArgs) =>
-            //{
-            //    if (!body.inventory) return;
-
-            //    int count = body.inventory.GetItemCount(PonePack.Items.ShareHealthChangesWithNearbyAllies);
-            //    statArgs.moveSpeedMultAdd += 5f * count;
-            //};
-
             args.ReportProgress(1f);
             yield break;
         }
@@ -78,22 +77,22 @@ namespace PonePack
 
         private void LoadItemDefs()
         {
-            //_geminiBands = _ponePackBundle.LoadAsset<ItemDef>("GeminiBands");
-            //PonePackContentPack.itemDefs.Add(new ItemDef[] { _geminiBands });
-
             PonePack.Items.ShareHealthChangesWithNearbyAllies = _ponePackBundle.LoadAsset<ItemDef>("GeminiBands");
             PonePackContentPack.itemDefs.Add(new ItemDef[] { PonePack.Items.ShareHealthChangesWithNearbyAllies });
 
             //Test
             PonePack.ItemObjects.ShareHealthChangesBonusIndicator = _ponePackBundle.LoadAsset<GameObject>("ShareHealthChangesBonusIndicator");
-            Debug.Log(PonePack.ItemObjects.ShareHealthChangesBonusIndicator.name);
-            //PonePackContentPack.bodyPrefabs.Add(new GameObject[] { PonePack.ItemObjects.ShareHealthChangesBonusIndicator });
         }
 
         private void LoadBuffDefs()
         {
             PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff = _ponePackBundle.LoadAsset<BuffDef>("ShareHealthChangesWithNearbyAlliesBuff");
             PonePackContentPack.buffDefs.Add(new BuffDef[] { PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff });
+        }
+
+        private void LoadProcTypes()
+        {
+            ModdedProcTypes.HealthLink = R2API.ProcTypeAPI.ReserveProcType();
         }
     }
 }
