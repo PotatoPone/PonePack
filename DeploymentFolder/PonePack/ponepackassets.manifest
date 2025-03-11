@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1338479019
+CRC: 362892014
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9db9718ffe08cd0258ad3f37f5052262
+    Hash: ea13d9dffd2c83da6992df49a83dc617
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d60e3635b1335f13b66090438e7c16b3
+    Hash: ce4638e99b668434c590de8ce2219a51
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -28,28 +28,48 @@ ClassTypes:
 - Class: 65
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: c9036326ea8c60744877e71e13bcf187, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2456a47cf83ac3842b22deb84272fcda, type: 3}
+- Class: 114
+  Script: {fileID: -2051541306, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1783169300, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 81a6f32c4710cad44aec7a3cdc7c8384, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: e0d71a06c633ec94c9ee3f3d2f273939, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 42c241bf49e5ac540b9dd76b29f22690, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 120
   Script: {instanceID: 0}
 - Class: 135
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.UnityEvent
 - AssemblyName: com.unity.multiplayer-hlapi.Runtime
   ClassName: UnityEngine.Networking.NetworkHash128
 - AssemblyName: com.unity.multiplayer-hlapi.Runtime
   ClassName: UnityEngine.Networking.NetworkSceneId
 Assets:
-- Assets/PonePack/Assets/Items/ShareHealthChanges/ShareHealthChangesRangeIndicatorMaterial.mat
-- Assets/PonePack/Assets/Items/ShareHealthChanges/GeminiBands.asset
-- Assets/PonePack/Assets/Items/ShareHealthChanges/Cube.prefab
-- Assets/PonePack/Assets/Items/ShareHealthChanges/ShareHealthChangesBonusIndicator.prefab
+- Assets/PonePack/Assets/ReplicationCube.prefab
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkRangeIndicatorMaterial.mat
+- Assets/PonePack/Assets/Items/HealthLink/HealthLink.asset
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherMaterial.mat
+- Assets/PonePack/Assets/Items/HealthLink/double helix.png
+- Assets/PonePack/Assets/Items/HealthLink/Cube.prefab
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkBodyAttachment.prefab
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherVFX.prefab
 - Assets/PonePack/Assets/Buffs/ShareHealthChangesWithNearbyAlliesBuff.asset
 Dependencies: []

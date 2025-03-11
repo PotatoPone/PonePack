@@ -10,7 +10,7 @@ namespace PonePack
 {
     public static class Items
     {
-        public static ItemDef ShareHealthChangesWithNearbyAllies;
+        public static ItemDef HealthLink;
     }
 
     public static class Buffs
@@ -20,7 +20,8 @@ namespace PonePack
 
     public static class ItemObjects
     {
-        public static GameObject ShareHealthChangesBonusIndicator;
+        public static GameObject HealthLinkBodyAttachment;
+        public static GameObject ReplicationCube;
     }
 
     public static class ModdedProcTypes
@@ -54,6 +55,7 @@ namespace PonePack
             LoadItemDefs();
             LoadBuffDefs();
             LoadProcTypes();
+            LoadNetworkObjectPrefabs();
         }
         public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
         {
@@ -77,11 +79,8 @@ namespace PonePack
 
         private void LoadItemDefs()
         {
-            PonePack.Items.ShareHealthChangesWithNearbyAllies = _ponePackBundle.LoadAsset<ItemDef>("GeminiBands");
-            PonePackContentPack.itemDefs.Add(new ItemDef[] { PonePack.Items.ShareHealthChangesWithNearbyAllies });
-
-            //Test
-            PonePack.ItemObjects.ShareHealthChangesBonusIndicator = _ponePackBundle.LoadAsset<GameObject>("ShareHealthChangesBonusIndicator");
+            PonePack.Items.HealthLink = _ponePackBundle.LoadAsset<ItemDef>("HealthLink");
+            PonePackContentPack.itemDefs.Add(new ItemDef[] { PonePack.Items.HealthLink });
         }
 
         private void LoadBuffDefs()
@@ -93,6 +92,25 @@ namespace PonePack
         private void LoadProcTypes()
         {
             ModdedProcTypes.HealthLink = R2API.ProcTypeAPI.ReserveProcType();
+        }
+
+        private void LoadNetworkObjectPrefabs()
+        {
+            // HealthLinkBodyAttachment
+            Debug.Log("Initializing HealthLinkBodyAttachment...");
+
+            GameObject healthLinkBodyAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("HealthLinkBodyAttachment");
+            healthLinkBodyAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
+
+            PonePack.ItemObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
+            PonePack.ItemObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
+            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.ItemObjects.HealthLinkBodyAttachment });
+
+            // Replication Cube
+            Debug.Log("Initializing ReplicationCube...");
+            PonePack.ItemObjects.ReplicationCube = PrefabAPI.InstantiateClone(_ponePackBundle.LoadAsset<GameObject>("ReplicationCube"), "ReplicationCube");
+            PonePack.ItemObjects.ReplicationCube.RegisterNetworkPrefab();
+            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.ItemObjects.ReplicationCube });
         }
     }
 }

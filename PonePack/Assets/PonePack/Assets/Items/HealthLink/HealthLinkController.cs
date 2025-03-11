@@ -12,34 +12,14 @@ using R2API;
 
 namespace PonePack
 {
-    //public class TestClass : BaseUnityPlugin
-    //{
-    //    // Somewhere in your BaseUnityPlugin class
-    //    private void OnEnable()
-    //    {
-    //        On.RoR2.RoR2Application.Awake += OnRoR2ApplicationAwake;
-    //    }
-
-    //    private void OnDisable()
-    //    {
-    //        On.RoR2.RoR2Application.Awake -= OnRoR2ApplicationAwake;
-    //    }
-
-    //    private static void OnRoR2ApplicationAwake(On.RoR2.RoR2Application.orig_Awake orig, RoR2Application self)
-    //    {
-    //        // code that will run before the original method
-
-    //        orig(self);
-
-    //        // code that will run after the original method
-    //    }
-    //}
-
-    public class ShareHealthChangesWithNearbyAllies : MonoBehaviour
+    [RequireComponent(typeof(NetworkedBodyAttachment))]
+    public class HealthLinkController : NetworkBehaviour
     {
         private int charactersInRange;
         private int maxCharacterCount; //Unneeded
         private float maxRange = 20f;
+        private List<TeamComponent> teamMembersInRange;
+        private List<Transform> tetheredTransforms;
 
         [SerializeField]
         public SphereCollider sphereCollider;
@@ -51,7 +31,10 @@ namespace PonePack
         private NetworkedBodyAttachment networkedBodyAttachment;
 
         [SerializeField]
-        private float syncInterval = 3f;
+        private HealthLinkTetherVFXOrigin healthLinkTetherVFXOrigin;
+
+        [SerializeField]
+        private float syncInterval = 1f;
 
         [HideInInspector]
         public CharacterBody body;
@@ -59,11 +42,20 @@ namespace PonePack
         private float radiusSizeGrowth;
         private float timer;
 
-        private void Start()
+        private void Awake()
         {
             this.networkedBodyAttachment = GetComponent<NetworkedBodyAttachment>();
-            this.body = this.networkedBodyAttachment.attachedBody; //Obj ref not set to instance
+        }
+
+        private void Start()
+        {
+            Debug.Log("HealthLinkController starting...");
+
+            this.body = this.networkedBodyAttachment.attachedBody;
+            this.teamMembersInRange = new List<TeamComponent>();
+            this.tetheredTransforms = new List<Transform>();
             bool active = NetworkServer.active;
+
             if (!active)
             {
                 CharacterBody characterBody = this.body;
@@ -82,9 +74,13 @@ namespace PonePack
                 return;
             }
             float indicatorDiameter;
-            this.UpdateValues(this.body.inventory.GetItemCount(PonePack.Items.ShareHealthChangesWithNearbyAllies), out indicatorDiameter);
+            this.UpdateValues(this.body.inventory.GetItemCount(PonePack.Items.HealthLink), out indicatorDiameter);
 
             this.SetIndicatorDiameter(indicatorDiameter);
+
+            //UpdateTeamMembersInRange();
+
+            //this.gameObject.layer = LayerIndex.collideWithCharacterHullOnly.mask;
         }
 
         private void OnEnable()
@@ -119,18 +115,47 @@ namespace PonePack
 
         private void Update()
         {
-            if (!NetworkServer.active)
-            {
-                return;
-            }
+            if (!NetworkServer.active) return;
             this.timer -= Time.deltaTime;
-            if (this.timer > 0f)
-            {
-                return;
-            }
+            if (this.timer > 0f) return;
             this.timer = this.syncInterval;
+
+            UpdateTeamMembersInRange();
             //this.TryUpdateCharactersInRange(this.sphereCollider.radius);
             //this.ReconcileBuffCount();
+        }
+
+        private void UpdateTeamMembersInRange()
+        {
+            Debug.Log("UpdateTeamMembersInRange called!");
+            teamMembersInRange.Clear();
+            tetheredTransforms.Clear();
+
+            ReadOnlyCollection<TeamComponent> teamComponents = TeamComponent.GetTeamMembers(TeamIndex.Player);
+
+            foreach (TeamComponent teamComponent in teamComponents)
+            {
+                if (teamComponent.body == this.body) continue;
+                if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
+
+                teamMembersInRange.Add(teamComponent);
+                tetheredTransforms.Add(teamComponent.body.coreTransform);
+            }
+
+            if (this.healthLinkTetherVFXOrigin)
+            {
+                Debug.Log("SetTetheredTransforms called");
+                this.healthLinkTetherVFXOrigin.SetTetheredTransforms(tetheredTransforms);
+            }
+        }
+
+        private bool CanAffectCharacter(HealthComponent healthComponent, ProcChainMask procChainMask)
+        {
+            if (!healthComponent.body) return false;
+            if (!healthComponent.alive) return false;
+            if (R2API.ProcTypeAPI.HasModdedProc(procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return false;
+
+            return true;
         }
 
         private float HealAllies(On.RoR2.HealthComponent.orig_Heal orig, HealthComponent self, float amount, ProcChainMask procChainMask, bool nonRegen)
@@ -143,20 +168,15 @@ namespace PonePack
 
             //-- code that will run after the original method
 
-
             if (self.body && self.alive && self.body == this.body)
             {
                 if (nonRegen == false) return 0; // Do not share healing from regen
                 if (R2API.ProcTypeAPI.HasModdedProc(procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return 0; // Do not heal if this healing was caused by another shareHealth item
 
-                ReadOnlyCollection<TeamComponent> teamComponents = TeamComponent.GetTeamMembers(TeamIndex.Player);
+                UpdateTeamMembersInRange();
 
-                //Need to check for distance
-                foreach (TeamComponent teamComponent in teamComponents)
+                foreach (TeamComponent teamComponent in teamMembersInRange)
                 {
-                    if (teamComponent.body == this.body) continue;
-                    if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
-
                     R2API.ProcTypeAPI.AddModdedProc(ref procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
                     Debug.Log("Healing " + teamComponent.body.name);
                     teamComponent.body.healthComponent.Heal(healAmount, procChainMask, true);
@@ -174,14 +194,10 @@ namespace PonePack
             {
                 if (R2API.ProcTypeAPI.HasModdedProc(damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return; // Do not heal if this healing was caused by another shareHealth item
 
-                ReadOnlyCollection<TeamComponent> teamComponents = TeamComponent.GetTeamMembers(TeamIndex.Player);
+                UpdateTeamMembersInRange();
 
-                //Need to check for distance
-                foreach (TeamComponent teamComponent in teamComponents)
+                foreach (TeamComponent teamComponent in teamMembersInRange)
                 {
-                    if (teamComponent.body == this.body) continue;
-                    if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
-
                     R2API.ProcTypeAPI.AddModdedProc(ref damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
                     teamComponent.body.healthComponent.TakeDamage(damageInfo);
                 }
@@ -190,20 +206,18 @@ namespace PonePack
 
         private void HandleNetworkItemUpdateClient(CharacterBody.NetworkItemBehaviorData itemBehaviorData)
         {
-            if (itemBehaviorData.itemIndex != PonePack.Items.ShareHealthChangesWithNearbyAllies.itemIndex)
-            {
-                return;
-            }
+            if (itemBehaviorData.itemIndex != PonePack.Items.HealthLink.itemIndex) return;
+
             this.SetIndicatorDiameter(itemBehaviorData.floatValue);
         }
 
         private void ServerUpdateValuesFromInventory()
         {
-            int itemCount = this.body.inventory.GetItemCount(PonePack.Items.ShareHealthChangesWithNearbyAllies);
+            int itemCount = this.body.inventory.GetItemCount(PonePack.Items.HealthLink);
             float num;
             this.UpdateValues(itemCount, out num);
             this.SetIndicatorDiameter(num);
-            this.body.TransmitItemBehavior(new CharacterBody.NetworkItemBehaviorData(PonePack.Items.ShareHealthChangesWithNearbyAllies.itemIndex, num));
+            this.body.TransmitItemBehavior(new CharacterBody.NetworkItemBehaviorData(PonePack.Items.HealthLink.itemIndex, num));
         }
 
         private void UpdateValues(int itemCount, out float diameter)
@@ -215,16 +229,26 @@ namespace PonePack
 
         private void SetIndicatorDiameter(float diameter)
         {
-            this.indicatorSphere.transform.localScale = new Vector3(diameter, diameter, diameter);
-            this.sphereCollider.radius = diameter / 2f;
+            this.indicatorSphere.transform.localScale = new Vector3(maxRange * 2, maxRange * 2, maxRange * 2);
+            this.sphereCollider.radius = maxRange;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!NetworkServer.active)
+            Debug.Log("Before active check");
+            Debug.Log(other);
+            if (!NetworkServer.active) return;
+            Debug.Log("After active check");
+
+            // Failing on check 2: other.gameObject.TryGetComponent<CharacterBody>(out otherBody)
+
+            if (other != null)
             {
-                return;
+                Debug.Log("1: " + other);
+                Debug.Log("2: " + other.gameObject.name);
+                Debug.Log("3: " + other.gameObject.GetComponent<CharacterBody>() != null);
             }
+
             CharacterBody otherBody;
             if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
             {
@@ -234,15 +258,15 @@ namespace PonePack
                     this.body.AddBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
                 }
                 this.timer = this.syncInterval;
+
+                UpdateTeamMembersInRange();
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (!NetworkServer.active)
-            {
-                return;
-            }
+            if (!NetworkServer.active) return;
+
             CharacterBody otherBody;
             if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
             {
@@ -252,6 +276,8 @@ namespace PonePack
                 }
                 this.charactersInRange--;
                 this.timer = this.syncInterval;
+
+                UpdateTeamMembersInRange();
             }
         }
 
