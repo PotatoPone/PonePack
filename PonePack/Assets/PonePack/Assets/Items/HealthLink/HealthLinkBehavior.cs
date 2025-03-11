@@ -30,41 +30,12 @@ namespace PonePack
         {
             if (NetworkServer.active)
             {
-                //-- WORKED?
-                //Debug.Log("Spawning HealthLinkBodyAttachment...");
-                //this.attachment = UnityEngine.Object.Instantiate<GameObject>(prefab).GetComponent<NetworkedBodyAttachment>();
-                //this.attachment.AttachToGameObjectAndSpawn(this.body.gameObject, null);
-
-
-
-                //Debug.Log("Spawning healthLinkBodyAttachment...");
-                //this.healthLinkBodyAttachment = PonePack.ItemObjects.HealthLinkBodyAttachment.InstantiateClone(name + "healthLinkBodyAttachment", true);
-                //this.healthLinkBodyAttachment.RegisterNetworkPrefab();
-                //this.attachment = this.healthLinkBodyAttachment.GetComponent<NetworkedBodyAttachment>();
-
-                //if (!this.attachment)
-                //{
-                //    Debug.LogWarning("healthLinkBodyAttachment doesn't have a NetworkedBodyAttachment. Creating one...");
-                //    this.attachment = this.healthLinkBodyAttachment.AddComponent<NetworkedBodyAttachment>();
-                //    this.attachment.shouldParentToAttachedBody = true;
-                //}
-
-                //this.attachment.AttachToGameObjectAndSpawn(this.body.gameObject);
-
-
-                //-- healthLinkBodyAttachment
                 this.healthLinkBodyAttachment = Instantiate(PonePack.ItemObjects.HealthLinkBodyAttachment);
                 this.attachment = this.healthLinkBodyAttachment.GetComponent<NetworkedBodyAttachment>();
 
                 if (!this.attachment) Debug.LogWarning("healthLinkBodyAttachment doesn't have a NetworkedBodyAttachment");
 
                 this.attachment.AttachToGameObjectAndSpawn(this.body.gameObject);
-
-
-                //-- ReplicationCube
-                Debug.Log("Spawning ReplicationCube...");
-                GameObject cube = Instantiate(PonePack.ItemObjects.ReplicationCube);
-                NetworkServer.Spawn(cube);
             }
         }
 

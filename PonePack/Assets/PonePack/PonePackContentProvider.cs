@@ -21,7 +21,6 @@ namespace PonePack
     public static class ItemObjects
     {
         public static GameObject HealthLinkBodyAttachment;
-        public static GameObject ReplicationCube;
     }
 
     public static class ModdedProcTypes
@@ -105,12 +104,6 @@ namespace PonePack
             PonePack.ItemObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
             PonePack.ItemObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
             PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.ItemObjects.HealthLinkBodyAttachment });
-
-            // Replication Cube
-            Debug.Log("Initializing ReplicationCube...");
-            PonePack.ItemObjects.ReplicationCube = PrefabAPI.InstantiateClone(_ponePackBundle.LoadAsset<GameObject>("ReplicationCube"), "ReplicationCube");
-            PonePack.ItemObjects.ReplicationCube.RegisterNetworkPrefab();
-            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.ItemObjects.ReplicationCube });
         }
     }
 }

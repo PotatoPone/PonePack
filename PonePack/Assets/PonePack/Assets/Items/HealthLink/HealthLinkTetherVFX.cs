@@ -9,6 +9,7 @@ namespace PonePack
     {
         private void Start()
         {
+            Debug.Log("A tether was created");
             this.curve = base.GetComponent<PP_BezierCurveLine>();
         }
 

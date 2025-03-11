@@ -85,14 +85,20 @@ namespace PonePack
 
         private void OnEnable()
         {
-            On.RoR2.HealthComponent.Heal += HealAllies;
-            On.RoR2.HealthComponent.TakeDamage += DamageAllies;
+            if (NetworkServer.active)
+            {
+                On.RoR2.HealthComponent.Heal += HealAllies;
+                On.RoR2.HealthComponent.TakeDamage += DamageAllies;
+            }
         }
 
         private void OnDisable()
         {
-            On.RoR2.HealthComponent.Heal -= HealAllies;
-            On.RoR2.HealthComponent.TakeDamage -= DamageAllies;
+            if (NetworkServer.active)
+            {
+                On.RoR2.HealthComponent.Heal -= HealAllies;
+                On.RoR2.HealthComponent.TakeDamage -= DamageAllies;
+            }
 
             if (this.body)
             {
@@ -115,7 +121,7 @@ namespace PonePack
 
         private void Update()
         {
-            if (!NetworkServer.active) return;
+            //if (!NetworkServer.active) return; //could be why client doesn't see tether?
             this.timer -= Time.deltaTime;
             if (this.timer > 0f) return;
             this.timer = this.syncInterval;
@@ -146,6 +152,10 @@ namespace PonePack
             {
                 Debug.Log("SetTetheredTransforms called");
                 this.healthLinkTetherVFXOrigin.SetTetheredTransforms(tetheredTransforms);
+            }
+            else
+            {
+                Debug.LogWarning("healthLinkTetherVFXOrigin doesn't exist");
             }
         }
 
@@ -235,10 +245,7 @@ namespace PonePack
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Before active check");
-            Debug.Log(other);
             if (!NetworkServer.active) return;
-            Debug.Log("After active check");
 
             // Failing on check 2: other.gameObject.TryGetComponent<CharacterBody>(out otherBody)
 
