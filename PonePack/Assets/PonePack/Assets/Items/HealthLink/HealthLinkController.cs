@@ -15,9 +15,10 @@ namespace PonePack
     [RequireComponent(typeof(NetworkedBodyAttachment))]
     public class HealthLinkController : NetworkBehaviour
     {
-        private int charactersInRange;
-        private int maxCharacterCount; //Unneeded
-        private float maxRange = 20f;
+        [SyncVar]
+        private int stackCount;
+
+        private float baseRange = 20f;
         private List<TeamComponent> teamMembersInRange;
         private List<Transform> tetheredTransforms;
 
@@ -45,6 +46,7 @@ namespace PonePack
         private void Awake()
         {
             this.networkedBodyAttachment = GetComponent<NetworkedBodyAttachment>();
+            this.gameObject.layer = LayerIndex.collideWithCharacterHullOnly.intVal;
         }
 
         private void Start()
@@ -66,7 +68,7 @@ namespace PonePack
                 this.body.onInventoryChanged += this.ServerUpdateValuesFromInventory;
                 this.timer = this.syncInterval;
             }
-            //this.TryUpdateCharactersInRange(20f);
+
             if (active)
             {
                 //this.ReconcileBuffCount();
@@ -76,11 +78,8 @@ namespace PonePack
             float indicatorDiameter;
             this.UpdateValues(this.body.inventory.GetItemCount(PonePack.Items.HealthLink), out indicatorDiameter);
 
-            this.SetIndicatorDiameter(indicatorDiameter);
-
-            //UpdateTeamMembersInRange();
-
-            //this.gameObject.layer = LayerIndex.collideWithCharacterHullOnly.mask;
+            //this.SetIndicatorDiameter(indicatorDiameter);
+            this.SetIndicatorDiameter();
         }
 
         private void OnEnable()
@@ -88,7 +87,7 @@ namespace PonePack
             if (NetworkServer.active)
             {
                 On.RoR2.HealthComponent.Heal += HealAllies;
-                On.RoR2.HealthComponent.TakeDamage += DamageAllies;
+                On.RoR2.GlobalEventManager.ServerDamageDealt += OnDamageDealt;
             }
         }
 
@@ -97,7 +96,7 @@ namespace PonePack
             if (NetworkServer.active)
             {
                 On.RoR2.HealthComponent.Heal -= HealAllies;
-                On.RoR2.HealthComponent.TakeDamage -= DamageAllies;
+                On.RoR2.GlobalEventManager.ServerDamageDealt -= OnDamageDealt;
             }
 
             if (this.body)
@@ -127,13 +126,13 @@ namespace PonePack
             this.timer = this.syncInterval;
 
             UpdateTeamMembersInRange();
+
             //this.TryUpdateCharactersInRange(this.sphereCollider.radius);
             //this.ReconcileBuffCount();
         }
 
         private void UpdateTeamMembersInRange()
         {
-            Debug.Log("UpdateTeamMembersInRange called!");
             teamMembersInRange.Clear();
             tetheredTransforms.Clear();
 
@@ -142,39 +141,79 @@ namespace PonePack
             foreach (TeamComponent teamComponent in teamComponents)
             {
                 if (teamComponent.body == this.body) continue;
-                if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > maxRange) continue;
+                //if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > this.baseRange) continue;
+                if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > CalculateRange()) continue;
 
                 teamMembersInRange.Add(teamComponent);
                 tetheredTransforms.Add(teamComponent.body.coreTransform);
             }
 
-            if (this.healthLinkTetherVFXOrigin)
-            {
-                Debug.Log("SetTetheredTransforms called");
-                this.healthLinkTetherVFXOrigin.SetTetheredTransforms(tetheredTransforms);
-            }
-            else
-            {
-                Debug.LogWarning("healthLinkTetherVFXOrigin doesn't exist");
-            }
+            // Update target transforms for the VFX
+            if (this.healthLinkTetherVFXOrigin) this.healthLinkTetherVFXOrigin.SetTetheredTransforms(tetheredTransforms);
         }
 
-        private bool CanAffectCharacter(HealthComponent healthComponent, ProcChainMask procChainMask)
-        {
-            if (!healthComponent.body) return false;
-            if (!healthComponent.alive) return false;
-            if (R2API.ProcTypeAPI.HasModdedProc(procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return false;
+        //-- Potentially a better system because it will detect large colliders, but currently detects enemy HurtBoxes
+        //private void UpdateHealthComponentsInRange()
+        //{
+        //    this.healthComponentsInRange.Clear();
+        //    this.tetheredTransforms.Clear();
 
-            return true;
+        //    TeamMask mask = TeamMask.none;
+        //    mask.AddTeam(TeamIndex.Player);
+        //    List<HurtBox> list = CollectionPool<HurtBox, List<HurtBox>>.RentCollection();
+        //    SphereSearch sphereSearch = new SphereSearch();
+        //    sphereSearch.mask = LayerIndex.collideWithCharacterHullOnly.mask;
+        //    sphereSearch.origin = base.transform.position;
+        //    sphereSearch.radius = this.CalculateRange();
+        //    sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
+        //    sphereSearch.FilterCandidatesByHurtBoxTeam(mask);
+        //    sphereSearch.RefreshCandidates();
+        //    sphereSearch.OrderCandidatesByDistance();
+        //    sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
+        //    sphereSearch.GetHurtBoxes(list);
+        //    sphereSearch.ClearCandidates();
+
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        HurtBox hurtBox = list[i];
+        //        if (!(hurtBox.healthComponent == null) && !(hurtBox.healthComponent.body == null))
+        //        {
+        //            this.healthComponentsInRange.Add(hurtBox.healthComponent);
+        //            this.tetheredTransforms.Add(hurtBox.healthComponent.body.coreTransform);
+        //        }
+        //    }
+        //    CollectionPool<HurtBox, List<HurtBox>>.ReturnCollection(list);
+
+
+        //    // Update target transforms for the VFX
+        //    if (this.healthLinkTetherVFXOrigin) this.healthLinkTetherVFXOrigin.SetTetheredTransforms(tetheredTransforms);
+        //}
+
+        private float CalculateRange()
+        {
+            // +100% per stack
+            //return this.baseRange + (this.baseRange * (this.stackCount - 1));
+
+            //// +50% per stack
+            //float rangeAddedPerStack = this.baseRange / 2;
+            //return this.baseRange + (rangeAddedPerStack * (this.stackCount - 1));
+
+            return this.baseRange;
+        }
+
+        private float CalculateAmountPerStack(float baseAmount)
+        {
+            // +50% per stack
+            int stackCount = this.body.inventory.GetItemCount(PonePack.Items.HealthLink);
+            float amountAddedPerStack = (float)(baseAmount * 0.5) * (stackCount - 1);
+            return baseAmount + amountAddedPerStack;
         }
 
         private float HealAllies(On.RoR2.HealthComponent.orig_Heal orig, HealthComponent self, float amount, ProcChainMask procChainMask, bool nonRegen)
         {
-            Debug.Log("HealAllies was called");
-
             //-- code that will run before the original method
 
-            float healAmount = orig(self, amount, procChainMask, nonRegen);
+            float amountHolderHealed = orig(self, amount, procChainMask, nonRegen);
 
             //-- code that will run after the original method
 
@@ -188,28 +227,31 @@ namespace PonePack
                 foreach (TeamComponent teamComponent in teamMembersInRange)
                 {
                     R2API.ProcTypeAPI.AddModdedProc(ref procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
-                    Debug.Log("Healing " + teamComponent.body.name);
-                    teamComponent.body.healthComponent.Heal(healAmount, procChainMask, true);
+                    float amountToHealOthers = CalculateAmountPerStack(amountHolderHealed);
+                    teamComponent.body.healthComponent.Heal(amountToHealOthers, procChainMask, true);
                 }
             }
 
-            return healAmount;
+            return amountHolderHealed;
         }
 
-        private void DamageAllies(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        private void OnDamageDealt(On.RoR2.GlobalEventManager.orig_ServerDamageDealt orig, DamageReport damageReport)
         {
-            orig(self, damageInfo);
+            orig(damageReport);
 
-            if (self.body && self.alive && self.body == this.body)
+            if (damageReport.victimBody && damageReport.victimBody.GetComponent<HealthComponent>().alive && damageReport.victimBody == this.body)
             {
-                if (R2API.ProcTypeAPI.HasModdedProc(damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return; // Do not heal if this healing was caused by another shareHealth item
+                if (R2API.ProcTypeAPI.HasModdedProc(damageReport.damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink) == true) return; // Do not heal if this healing was caused by another shareHealth item
 
                 UpdateTeamMembersInRange();
 
                 foreach (TeamComponent teamComponent in teamMembersInRange)
                 {
-                    R2API.ProcTypeAPI.AddModdedProc(ref damageInfo.procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
-                    teamComponent.body.healthComponent.TakeDamage(damageInfo);
+                    DamageInfo damageInfoForLinkedBody = damageReport.damageInfo;
+
+                    R2API.ProcTypeAPI.AddModdedProc(ref damageInfoForLinkedBody.procChainMask, PonePack.ModdedProcTypes.HealthLink); // Prevent recursion
+                    damageInfoForLinkedBody.damage = CalculateAmountPerStack(damageReport.damageDealt);
+                    teamComponent.body.healthComponent.TakeDamage(damageInfoForLinkedBody);
                 }
             }
         }
@@ -218,7 +260,7 @@ namespace PonePack
         {
             if (itemBehaviorData.itemIndex != PonePack.Items.HealthLink.itemIndex) return;
 
-            this.SetIndicatorDiameter(itemBehaviorData.floatValue);
+            this.SetIndicatorDiameter();
         }
 
         private void ServerUpdateValuesFromInventory()
@@ -226,45 +268,39 @@ namespace PonePack
             int itemCount = this.body.inventory.GetItemCount(PonePack.Items.HealthLink);
             float num;
             this.UpdateValues(itemCount, out num);
-            this.SetIndicatorDiameter(num);
+            this.SetIndicatorDiameter();
             this.body.TransmitItemBehavior(new CharacterBody.NetworkItemBehaviorData(PonePack.Items.HealthLink.itemIndex, num));
+
+            //this.stackCount = itemCount;
         }
 
         private void UpdateValues(int itemCount, out float diameter)
         {
-            this.maxCharacterCount = 2 + itemCount * 2;
             this.radiusSizeGrowth = Util.ConvertAmplificationPercentageIntoReductionPercentage((float)(itemCount * 5));
             diameter = 35f + this.radiusSizeGrowth;
         }
 
-        private void SetIndicatorDiameter(float diameter)
+        private void SetIndicatorDiameter()
         {
-            this.indicatorSphere.transform.localScale = new Vector3(maxRange * 2, maxRange * 2, maxRange * 2);
-            this.sphereCollider.radius = maxRange;
+            float range = CalculateRange();
+
+            this.indicatorSphere.transform.localScale = new Vector3(range * 2, range * 2, range * 2);
+            this.sphereCollider.radius = range;
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (!NetworkServer.active) return;
 
-            // Failing on check 2: other.gameObject.TryGetComponent<CharacterBody>(out otherBody)
-
-            if (other != null)
-            {
-                Debug.Log("1: " + other);
-                Debug.Log("2: " + other.gameObject.name);
-                Debug.Log("3: " + other.gameObject.GetComponent<CharacterBody>() != null);
-            }
-
             CharacterBody otherBody;
-            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
+            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody)) // && this.CharacterBodyCountsTowardBuff(otherBody)
             {
-                this.charactersInRange++;
-                if (this.charactersInRange <= this.maxCharacterCount)
-                {
-                    this.body.AddBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
-                }
-                this.timer = this.syncInterval;
+                //this.charactersInRange++;
+                //if (this.charactersInRange <= this.maxCharacterCount)
+                //{
+                //    this.body.AddBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
+                //}
+                //this.timer = this.syncInterval;
 
                 UpdateTeamMembersInRange();
             }
@@ -275,14 +311,14 @@ namespace PonePack
             if (!NetworkServer.active) return;
 
             CharacterBody otherBody;
-            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody) && this.CharacterBodyCountsTowardBuff(otherBody))
+            if (other != null && other.gameObject.TryGetComponent<CharacterBody>(out otherBody)) // && this.CharacterBodyCountsTowardBuff(otherBody)
             {
-                if (this.charactersInRange <= this.maxCharacterCount)
-                {
-                    this.body.RemoveBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
-                }
-                this.charactersInRange--;
-                this.timer = this.syncInterval;
+                //if (this.charactersInRange <= this.maxCharacterCount)
+                //{
+                //    this.body.RemoveBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff);
+                //}
+                //this.charactersInRange--;
+                //this.timer = this.syncInterval;
 
                 UpdateTeamMembersInRange();
             }

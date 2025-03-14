@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 362892014
+CRC: 409061730
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ea13d9dffd2c83da6992df49a83dc617
+    Hash: 2b7fb8a506195615414b474221644b53
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ce4638e99b668434c590de8ce2219a51
+    Hash: a472ea46b66766dd3a04f24f86f8e713
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -31,8 +31,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: c9036326ea8c60744877e71e13bcf187, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 2456a47cf83ac3842b22deb84272fcda, type: 3}
 - Class: 114
   Script: {fileID: -2051541306, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -63,13 +61,21 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: com.unity.multiplayer-hlapi.Runtime
   ClassName: UnityEngine.Networking.NetworkSceneId
 Assets:
-- Assets/PonePack/Assets/ReplicationCube.prefab
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkRangeIndicatorMaterial.mat
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainTexture.png
+- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLink.asset
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainModel.prefab
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainNormal.png
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainModel.fbx
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherMaterial.mat
-- Assets/PonePack/Assets/Items/HealthLink/double helix.png
-- Assets/PonePack/Assets/Items/HealthLink/Cube.prefab
+- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Normal.png
+- Assets/PonePack/Assets/Items/HealthLink/Model/TopChain_Mat.mat
+- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Metallic.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkBodyAttachment.prefab
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherVFX.prefab
+- Assets/PonePack/Assets/Items/HealthLink/Model/Nugget_Mat.mat
 - Assets/PonePack/Assets/Buffs/ShareHealthChangesWithNearbyAlliesBuff.asset
+- Assets/PonePack/Assets/Items/HealthLink/healthLinkIcon.png
+- Assets/PonePack/Assets/Items/HealthLink/Model/BottomChain_Mat.mat
 Dependencies: []

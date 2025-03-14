@@ -37,8 +37,6 @@ namespace PonePack
 
         private static AssetBundle _ponePackBundle;
 
-        //private static ItemDef _geminiBands;
-
         public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
         {
             var asyncOperation = AssetBundle.LoadFromFileAsync(PonePackMain.assetBundleDir);
@@ -96,8 +94,6 @@ namespace PonePack
         private void LoadNetworkObjectPrefabs()
         {
             // HealthLinkBodyAttachment
-            Debug.Log("Initializing HealthLinkBodyAttachment...");
-
             GameObject healthLinkBodyAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("HealthLinkBodyAttachment");
             healthLinkBodyAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
 
