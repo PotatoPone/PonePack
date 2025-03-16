@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using R2API;
+using System;
 
 namespace PonePack
 {
@@ -13,14 +14,20 @@ namespace PonePack
         public static ItemDef HealthLink;
     }
 
-    public static class Buffs
+    public static class Equipment
     {
-        public static BuffDef ShareHealthChangesWithNearbyAlliesBuff;
+        public static EquipmentDef ShareItemPool;
     }
 
-    public static class ItemObjects
+    public static class Buffs
+    {
+        public static BuffDef HealthLink;
+    }
+
+    public static class NetworkedObjects
     {
         public static GameObject HealthLinkBodyAttachment;
+        public static GameObject ShareItemPoolAttachment;
     }
 
     public static class ModdedProcTypes
@@ -50,6 +57,7 @@ namespace PonePack
             _ponePackBundle = asyncOperation.assetBundle;
 
             LoadItemDefs();
+            LoadEquipmentDefs();
             LoadBuffDefs();
             LoadProcTypes();
             LoadNetworkObjectPrefabs();
@@ -62,9 +70,13 @@ namespace PonePack
         }
         public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
         {
+            On.RoR2.CharacterBody.OnEquipmentGained += OnEquipmentGained;
+            On.RoR2.CharacterBody.OnEquipmentLost += OnEquipmentLost;
+
             args.ReportProgress(1f);
             yield break;
         }
+
         private void AddSelf(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
         {
             addContentPackProvider(this);
@@ -80,10 +92,16 @@ namespace PonePack
             PonePackContentPack.itemDefs.Add(new ItemDef[] { PonePack.Items.HealthLink });
         }
 
+        private void LoadEquipmentDefs()
+        {
+            PonePack.Equipment.ShareItemPool = _ponePackBundle.LoadAsset<EquipmentDef>("ShareItemPool");
+            PonePackContentPack.equipmentDefs.Add(new EquipmentDef[] { PonePack.Equipment.ShareItemPool });
+        }
+
         private void LoadBuffDefs()
         {
-            PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff = _ponePackBundle.LoadAsset<BuffDef>("ShareHealthChangesWithNearbyAlliesBuff");
-            PonePackContentPack.buffDefs.Add(new BuffDef[] { PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff });
+            PonePack.Buffs.HealthLink = _ponePackBundle.LoadAsset<BuffDef>("HealthLinkBuff");
+            PonePackContentPack.buffDefs.Add(new BuffDef[] { PonePack.Buffs.HealthLink });
         }
 
         private void LoadProcTypes()
@@ -97,9 +115,41 @@ namespace PonePack
             GameObject healthLinkBodyAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("HealthLinkBodyAttachment");
             healthLinkBodyAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
 
-            PonePack.ItemObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
-            PonePack.ItemObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
-            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.ItemObjects.HealthLinkBodyAttachment });
+            PonePack.NetworkedObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
+            PonePack.NetworkedObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
+            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.HealthLinkBodyAttachment });
+
+
+
+            // ShareItemPoolAttachment
+            GameObject shareItemPoolAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("ShareItemPoolAttachment");
+            shareItemPoolAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
+
+            PonePack.NetworkedObjects.ShareItemPoolAttachment = PrefabAPI.InstantiateClone(shareItemPoolAttachmentAsset, "ShareItemPoolAttachment");
+            PonePack.NetworkedObjects.ShareItemPoolAttachment.RegisterNetworkPrefab();
+            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.ShareItemPoolAttachment });
+        }
+
+        //-- Hooks
+
+        private void OnEquipmentGained(On.RoR2.CharacterBody.orig_OnEquipmentGained orig, CharacterBody self, EquipmentDef equipmentDef)
+        {
+            if (NetworkServer.active)
+            {
+                if (equipmentDef == PonePack.Equipment.ShareItemPool) self.AddItemBehavior<ShareItemPoolBehavior>(1);
+            }
+
+            orig(self, equipmentDef);
+        }
+
+        private void OnEquipmentLost(On.RoR2.CharacterBody.orig_OnEquipmentLost orig, CharacterBody self, EquipmentDef equipmentDef)
+        {
+            if (NetworkServer.active)
+            {
+                if (equipmentDef == PonePack.Equipment.ShareItemPool) self.AddItemBehavior<ShareItemPoolBehavior>(0);
+            }
+
+            orig(self, equipmentDef);
         }
     }
 }

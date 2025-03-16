@@ -30,10 +30,8 @@ namespace PonePack
         {
             if (NetworkServer.active)
             {
-                this.healthLinkBodyAttachment = Instantiate(PonePack.ItemObjects.HealthLinkBodyAttachment);
+                this.healthLinkBodyAttachment = Instantiate(PonePack.NetworkedObjects.HealthLinkBodyAttachment);
                 this.attachment = this.healthLinkBodyAttachment.GetComponent<NetworkedBodyAttachment>();
-
-                if (!this.attachment) Debug.LogWarning("healthLinkBodyAttachment doesn't have a NetworkedBodyAttachment");
 
                 this.attachment.AttachToGameObjectAndSpawn(this.body.gameObject);
             }
@@ -41,10 +39,10 @@ namespace PonePack
 
         private void OnDisable()
         {
-            if (this.body && this.body.HasBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff))
-            {
-                this.body.SetBuffCount(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex, 0);
-            }
+            //if (this.body && this.body.HasBuff(PonePack.Buffs.HealthLink))
+            //{
+            //    this.body.SetBuffCount(PonePack.Buffs.HealthLink.buffIndex, 0);
+            //}
 
             if (this.attachment)
             {

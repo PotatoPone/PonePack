@@ -80,6 +80,7 @@ namespace PonePack
 
             //this.SetIndicatorDiameter(indicatorDiameter);
             this.SetIndicatorDiameter();
+            this.UpdateTeamMembersInRange();
         }
 
         private void OnEnable()
@@ -103,12 +104,12 @@ namespace PonePack
             {
                 if (NetworkServer.active)
                 {
-                    this.body.onInventoryChanged -= this.ServerUpdateValuesFromInventory;
-                    if (this.body.HasBuff(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff))
-                    {
-                        this.body.SetBuffCount(PonePack.Buffs.ShareHealthChangesWithNearbyAlliesBuff.buffIndex, 0);
-                        return;
-                    }
+                    //this.body.onInventoryChanged -= this.ServerUpdateValuesFromInventory;
+                    //if (this.body.HasBuff(PonePack.Buffs.HealthLink))
+                    //{
+                    //    this.body.SetBuffCount(PonePack.Buffs.HealthLink.buffIndex, 0);
+                    //    return;
+                    //}
                 }
                 else
                 {
@@ -133,6 +134,10 @@ namespace PonePack
 
         private void UpdateTeamMembersInRange()
         {
+            //teamMembersInRange.ForEach((teamComponent) =>
+            //{
+            //    previousTeamMembersInRange.Add(teamComponent);
+            //});
             teamMembersInRange.Clear();
             tetheredTransforms.Clear();
 
@@ -284,8 +289,8 @@ namespace PonePack
         {
             float range = CalculateRange();
 
-            this.indicatorSphere.transform.localScale = new Vector3(range * 2, range * 2, range * 2);
-            this.sphereCollider.radius = range;
+            //this.indicatorSphere.transform.localScale = new Vector3(range * 2, range * 2, range * 2);
+            if (this.sphereCollider) this.sphereCollider.radius = range;
         }
 
         private void OnTriggerEnter(Collider other)

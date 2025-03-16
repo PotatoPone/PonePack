@@ -7,9 +7,18 @@ namespace PonePack
     [RequireComponent(typeof(PP_BezierCurveLine))]
     public class HealthLinkTetherVFX : MonoBehaviour
     {
+        public AnimateShaderAlpha fadeOut;
+
+        [Tooltip("The transform to position at the target.")]
+        public Transform tetherEndTransform;
+
+        [Tooltip("The transform to position the end to.")]
+        public Transform tetherTargetTransform;
+
+        private PP_BezierCurveLine curve;
+
         private void Start()
         {
-            Debug.Log("A tether was created");
             this.curve = base.GetComponent<PP_BezierCurveLine>();
         }
 
@@ -27,7 +36,6 @@ namespace PonePack
 
         public void Terminate()
         {
-            Debug.Log("Terminate called!");
             //if (this.fadeOut)
             //{
             //    Debug.Log("FadeOut is enabled");
@@ -36,15 +44,5 @@ namespace PonePack
             //}
             UnityEngine.Object.Destroy(base.gameObject);
         }
-
-        public AnimateShaderAlpha fadeOut;
-
-        [Tooltip("The transform to position at the target.")]
-        public Transform tetherEndTransform;
-
-        [Tooltip("The transform to position the end to.")]
-        public Transform tetherTargetTransform;
-
-        private PP_BezierCurveLine curve;
     }
 }
