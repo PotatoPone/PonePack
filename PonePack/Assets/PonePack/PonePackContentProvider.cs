@@ -9,6 +9,11 @@ using System;
 
 namespace PonePack
 {
+    public static class Survivors
+    {
+        public static SurvivorDef Henry;
+    }
+
     public static class Items
     {
         public static ItemDef HealthLink;
@@ -55,6 +60,9 @@ namespace PonePack
 
             //Write code here to initialize your mod post assetbundle load
             _ponePackBundle = asyncOperation.assetBundle;
+
+            PonePack.Survivors.Henry = _ponePackBundle.LoadAsset<SurvivorDef>("HenrySurvivorDef");
+            PonePackContentPack.survivorDefs.Add(new SurvivorDef[] { PonePack.Survivors.Henry });
 
             LoadItemDefs();
             LoadEquipmentDefs();

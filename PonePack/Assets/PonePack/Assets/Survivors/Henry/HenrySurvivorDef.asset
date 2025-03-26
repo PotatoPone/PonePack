@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1881990681, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: HenrySurvivorDef
+  m_EditorClassIdentifier: 
+  bodyPrefab: {fileID: 8179898659106819386, guid: 2f275f0ca00d6bd4d91b7a453df1841c, type: 3}
+  displayPrefab: {fileID: 4933691675282629036, guid: 61a7e0085f3d59046a7a11b0c1f241d2, type: 3}
+  unlockableName: 
+  unlockableDef: {fileID: 0}
+  displayNameToken: Henry
+  descriptionToken: Henry's description
+  outroFlavorToken: Henry won
+  mainEndingEscapeFailureFlavorToken: Henry lost
+  primaryColor: {r: 0, g: 0, b: 0, a: 0}
+  desiredSortPosition: 0
+  hidden: 0
