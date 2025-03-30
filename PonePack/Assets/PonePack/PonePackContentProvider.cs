@@ -6,12 +6,29 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using R2API;
 using System;
+using EntityStates;
 
 namespace PonePack
 {
+    public static class BodyPrefabs
+    {
+        public static GameObject HazelBodyPrefab;
+        public static GameObject HazelDisplayPrefab;
+    }
+
+    public static class MasterPrefabs
+    {
+        public static GameObject HazelTurretMaster;
+    }
+
     public static class Survivors
     {
-        public static SurvivorDef Henry;
+        public static SurvivorDef Hazel;
+    }
+
+    public static class Deployables
+    {
+        public static DeployableSlot HazelTurretDeployableSlot;
     }
 
     public static class Items
@@ -61,14 +78,37 @@ namespace PonePack
             //Write code here to initialize your mod post assetbundle load
             _ponePackBundle = asyncOperation.assetBundle;
 
-            PonePack.Survivors.Henry = _ponePackBundle.LoadAsset<SurvivorDef>("HenrySurvivorDef");
-            PonePackContentPack.survivorDefs.Add(new SurvivorDef[] { PonePack.Survivors.Henry });
+            PonePack.Survivors.Hazel = _ponePackBundle.LoadAsset<SurvivorDef>("HazelSurvivorDef");
+            PonePack.Survivors.Hazel.cachedName = "PotatoPone_Hazel";
+
+            PonePackContentPack.survivorDefs.Add(new SurvivorDef[] { PonePack.Survivors.Hazel });
+            //bool result = ContentAddition.AddSurvivorDef(PonePack.Survivors.Hazel);
+            //Debug.Log("!!!!! Was Hazel added: " + result);
+
+
+            //TODO: Automate this process
+            HurtBoxGroup hurtBoxGroup = PonePack.Survivors.Hazel.bodyPrefab.GetComponent<HurtBoxGroup>();
+            hurtBoxGroup.mainHurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal;
+            hurtBoxGroup.mainHurtBox.GetComponent<HurtBox>().hurtBoxGroup = hurtBoxGroup;
+
+            //ContentAddition.AddBody(PonePack.Survivors.Hazel.bodyPrefab);
+            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { PonePack.Survivors.Hazel.bodyPrefab });
+
 
             LoadItemDefs();
             LoadEquipmentDefs();
             LoadBuffDefs();
             LoadProcTypes();
             LoadNetworkObjectPrefabs();
+            LoadHooks();
+
+            // Hazel turret master prefab
+            PonePack.MasterPrefabs.HazelTurretMaster = _ponePackBundle.LoadAsset<GameObject>("HazelTurretMaster");
+            PonePackContentPack.masterPrefabs.Add(new GameObject[] { PonePack.MasterPrefabs.HazelTurretMaster });
+
+            // Hazel turret body prefab
+            PonePack.BodyPrefabs.HazelBodyPrefab = _ponePackBundle.LoadAsset<GameObject>("HazelTurretBody");
+            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { PonePack.BodyPrefabs.HazelBodyPrefab });
         }
         public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
         {
@@ -78,9 +118,6 @@ namespace PonePack
         }
         public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
         {
-            On.RoR2.CharacterBody.OnEquipmentGained += OnEquipmentGained;
-            On.RoR2.CharacterBody.OnEquipmentLost += OnEquipmentLost;
-
             args.ReportProgress(1f);
             yield break;
         }
@@ -119,23 +156,46 @@ namespace PonePack
 
         private void LoadNetworkObjectPrefabs()
         {
-            // HealthLinkBodyAttachment
-            GameObject healthLinkBodyAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("HealthLinkBodyAttachment");
-            healthLinkBodyAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
+            AddBodyAttachment("HealthLinkBodyAttachment", ref PonePack.NetworkedObjects.HealthLinkBodyAttachment);
+            AddBodyAttachment("ShareItemPoolAttachment", ref PonePack.NetworkedObjects.ShareItemPoolAttachment);
 
-            PonePack.NetworkedObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
-            PonePack.NetworkedObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
-            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.HealthLinkBodyAttachment });
+            //// HealthLinkBodyAttachment
+            //GameObject healthLinkBodyAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("HealthLinkBodyAttachment");
+            //healthLinkBodyAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
 
+            //PonePack.NetworkedObjects.HealthLinkBodyAttachment = PrefabAPI.InstantiateClone(healthLinkBodyAttachmentAsset, "HealthLinkBodyAttachment");
+            //PonePack.NetworkedObjects.HealthLinkBodyAttachment.RegisterNetworkPrefab();
+            //PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.HealthLinkBodyAttachment });
 
+            //// ShareItemPoolAttachment
+            //GameObject shareItemPoolAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("ShareItemPoolAttachment");
+            //shareItemPoolAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
 
-            // ShareItemPoolAttachment
-            GameObject shareItemPoolAttachmentAsset = _ponePackBundle.LoadAsset<GameObject>("ShareItemPoolAttachment");
-            shareItemPoolAttachmentAsset.AddComponent<NetworkedBodyAttachment>();
+            //PonePack.NetworkedObjects.ShareItemPoolAttachment = PrefabAPI.InstantiateClone(shareItemPoolAttachmentAsset, "ShareItemPoolAttachment");
+            //PonePack.NetworkedObjects.ShareItemPoolAttachment.RegisterNetworkPrefab();
+            //PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.ShareItemPoolAttachment });
+        }
 
-            PonePack.NetworkedObjects.ShareItemPoolAttachment = PrefabAPI.InstantiateClone(shareItemPoolAttachmentAsset, "ShareItemPoolAttachment");
-            PonePack.NetworkedObjects.ShareItemPoolAttachment.RegisterNetworkPrefab();
-            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { PonePack.NetworkedObjects.ShareItemPoolAttachment });
+        private void AddItem(string defName, ref ItemDef itemDef)
+        {
+            itemDef = _ponePackBundle.LoadAsset<ItemDef>(defName);
+            PonePackContentPack.itemDefs.Add(new ItemDef[] { itemDef });
+        }
+
+        private void AddBodyAttachment(string objectName, ref GameObject objectReference)
+        {
+            GameObject _attachmentAsset = _ponePackBundle.LoadAsset<GameObject>(objectName);
+            _attachmentAsset.AddComponent<NetworkedBodyAttachment>();
+
+            objectReference = PrefabAPI.InstantiateClone(_attachmentAsset, objectName);
+            objectReference.RegisterNetworkPrefab();
+            PonePackContentPack.networkedObjectPrefabs.Add(new GameObject[] { objectReference });
+        }
+
+        private void LoadHooks()
+        {
+            On.RoR2.CharacterBody.OnEquipmentGained += OnEquipmentGained;
+            On.RoR2.CharacterBody.OnEquipmentLost += OnEquipmentLost;
         }
 
         //-- Hooks
