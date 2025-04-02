@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using RoR2;
 using EntityStates;
+using RoR2.Networking;
+using UnityEngine.Events;
+using UnityEngine.Networking;
+using Unity;
+using R2API.Networking.Interfaces;
 
 namespace PonePack.EntityStates.Hazel.HazelTurret
 {
     public class DeployTurret : BaseSkillState
     {
-        [SerializeField]
-        public GameObject turretPrefab;
-
-        [SerializeField]
-        public GameObject turretMasterPrefab;
-
         public static float baseDuration = 0.1f;
 
         private float duration;
@@ -97,7 +96,86 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
                 {
                     Debug.Log("Deploying turret...");
                     this.currentPlacementInfo = GetPlacementInfo();
-                    base.characterBody.SendConstructTurret(base.characterBody, this.currentPlacementInfo.position, this.currentPlacementInfo.rotation, MasterCatalog.FindMasterIndex(PonePack.MasterPrefabs.HazelTurretMaster));
+                    SendConstructTurret(base.characterBody, this.currentPlacementInfo.position, this.currentPlacementInfo.rotation, MasterCatalog.FindMasterIndex(PonePack.Survivors.Hazel.hazelTurretMaster));
+                }
+            }
+        }
+
+        private class ConstructTurretMessage : MessageBase
+        {
+            public GameObject builder;
+
+            public Vector3 position;
+
+            public Quaternion rotation;
+
+            public MasterCatalog.NetworkMasterIndex turretMasterIndex;
+
+            public override void Serialize(NetworkWriter writer)
+            {
+                writer.Write(builder);
+                writer.Write(position);
+                writer.Write(rotation);
+                GeneratedNetworkCode._WriteNetworkMasterIndex_MasterCatalog(writer, turretMasterIndex);
+            }
+
+            public override void Deserialize(NetworkReader reader)
+            {
+                builder = reader.ReadGameObject();
+                position = reader.ReadVector3();
+                rotation = reader.ReadQuaternion();
+                turretMasterIndex = GeneratedNetworkCode._ReadNetworkMasterIndex_MasterCatalog(reader);
+            }
+        }
+
+        [Client]
+        public void SendConstructTurret(CharacterBody builder, Vector3 position, Quaternion rotation, MasterCatalog.MasterIndex masterIndex)
+        {
+            if (!NetworkClient.active)
+            {
+                Debug.LogWarning("[Client] function 'System.Void RoR2.CharacterBody::SendConstructTurret(RoR2.CharacterBody,UnityEngine.Vector3,UnityEngine.Quaternion,RoR2.MasterCatalog/MasterIndex)' called on server");
+                return;
+            }
+
+            ConstructTurretMessage msg = new ConstructTurretMessage
+            {
+                builder = builder.gameObject,
+                position = position,
+                rotation = rotation,
+                turretMasterIndex = masterIndex
+            };
+            Debug.Log("Sent");
+            ClientScene.readyConnection.Send(64, msg);
+        }
+
+        [NetworkMessageHandler(msgType = 64, server = true)]
+        public static void HandleConstructTurret(NetworkMessage netMsg)
+        {
+            ConstructTurretMessage constructTurretMessage = netMsg.ReadMessage<ConstructTurretMessage>();
+            if (!constructTurretMessage.builder)
+            {
+                return;
+            }
+
+            CharacterBody component = constructTurretMessage.builder.GetComponent<CharacterBody>();
+            if ((bool)component)
+            {
+                CharacterMaster characterMaster = component.master;
+                if ((bool)characterMaster)
+                {
+                    CharacterMaster characterMaster2 = new MasterSummon
+                    {
+                        masterPrefab = MasterCatalog.GetMasterPrefab(constructTurretMessage.turretMasterIndex),
+                        position = constructTurretMessage.position,
+                        rotation = constructTurretMessage.rotation,
+                        summonerBodyObject = component.gameObject,
+                        ignoreTeamMemberLimit = true,
+                        inventoryToCopy = characterMaster.inventory
+                    }.Perform();
+                    Deployable deployable = characterMaster2.gameObject.AddComponent<Deployable>();
+                    deployable.onUndeploy = new UnityEvent();
+                    deployable.onUndeploy.AddListener(characterMaster2.TrueKill);
+                    characterMaster.AddDeployable(deployable, PonePack.Survivors.Hazel.hazelTurretDeployableSlot);
                 }
             }
         }

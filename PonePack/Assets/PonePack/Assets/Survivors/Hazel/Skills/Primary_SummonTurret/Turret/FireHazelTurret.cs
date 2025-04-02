@@ -1,8 +1,11 @@
 using EntityStates;
 using RoR2;
+using RoR2.Networking;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 namespace PonePack.EntityStates.Hazel.HazelTurret
@@ -13,12 +16,12 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
         public static GameObject hitEffectPrefab;
         public static GameObject tracerEffectPrefab;
         public static string attackSoundString;
-        public static float damageCoefficient;
-        public static float force;
-        public static float minSpread;
-        public static float maxSpread;
+        public static float damageCoefficient = 1f;
+        public static float force = 200f;
+        public static float minSpread = 0f;
+        public static float maxSpread = 0f;
         public static int bulletCount;
-        public static float baseDuration = 2f;
+        public static float baseDuration = 0.35f;
         public int bulletCountCurrent = 1;
         private float duration;
         private static int FireGaussStateHash = Animator.StringToHash("FireGauss");
@@ -27,6 +30,16 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
         public override void OnEnter()
         {
             base.OnEnter();
+            Fire();
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        private void Fire()
+        {
             this.duration = FireHazelTurret.baseDuration / this.attackSpeedStat;
             Util.PlaySound(FireHazelTurret.attackSoundString, base.gameObject);
             Ray aimRay = base.GetAimRay();
@@ -44,11 +57,11 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
                 bulletAttack.weapon = base.gameObject;
                 bulletAttack.origin = aimRay.origin;
                 bulletAttack.aimVector = aimRay.direction;
-                bulletAttack.minSpread = FireHazelTurret.minSpread;
-                bulletAttack.maxSpread = FireHazelTurret.maxSpread;
+                bulletAttack.minSpread = minSpread;
+                bulletAttack.maxSpread = maxSpread;
                 bulletAttack.bulletCount = 1U;
-                bulletAttack.damage = FireHazelTurret.damageCoefficient * this.damageStat;
-                bulletAttack.force = FireHazelTurret.force;
+                bulletAttack.damage = damageCoefficient * this.damageStat;
+                bulletAttack.force = force;
                 bulletAttack.tracerEffectPrefab = FireHazelTurret.tracerEffectPrefab;
                 bulletAttack.muzzleName = muzzleName;
                 bulletAttack.hitEffectPrefab = FireHazelTurret.hitEffectPrefab;
@@ -57,17 +70,7 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
                 bulletAttack.radius = 0.15f;
                 bulletAttack.damageType.damageSource = DamageSource.Primary;
                 bulletAttack.Fire();
-
-                Debug.Log("Fired with damage: " + bulletAttack.damage);
-                Debug.Log("damageCoefficient: " + FireHazelTurret.damageCoefficient);
-                Debug.Log("damageStat: " + this.damageStat);
-                Debug.Log("characterBody.damage: " + this.characterBody.damage);
             }
-        }
-
-        public override void OnExit()
-        {
-            base.OnExit();
         }
 
         public override void FixedUpdate()

@@ -36,7 +36,8 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
         {
             get
             {
-                return false;
+                return true; //test
+                //return false;
             }
         }
 

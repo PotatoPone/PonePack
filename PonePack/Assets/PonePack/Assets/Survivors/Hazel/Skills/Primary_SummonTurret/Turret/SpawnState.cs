@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace PonePack.EntityStates.Hazel.HazelTurret
 {
-    public class SpawnState : BaseState
+    public class SpawnState : BaseState //GenericCharacterSpawnState ?
     {
-        public static float duration = 4f;
+        public static float duration = 1f;
         //private static int SpawnStateHash = Animator.StringToHash("Spawn");
         //private static int SpawnParamHash = Animator.StringToHash("Spawn.playbackRate");
 

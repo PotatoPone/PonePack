@@ -10,22 +10,6 @@ using EntityStates;
 
 namespace PonePack
 {
-    public static class BodyPrefabs
-    {
-        public static GameObject HazelBodyPrefab;
-        public static GameObject HazelDisplayPrefab;
-    }
-
-    public static class MasterPrefabs
-    {
-        public static GameObject HazelTurretMaster;
-    }
-
-    public static class Survivors
-    {
-        public static SurvivorDef Hazel;
-    }
-
     public static class Deployables
     {
         public static DeployableSlot HazelTurretDeployableSlot;
@@ -57,6 +41,11 @@ namespace PonePack
         public static ModdedProcType HealthLink;
     }
 
+    public static class EntityStateConfigurations
+    {
+        public static EntityStateConfiguration FireHazelTurret;
+    }
+
     public class PonePackContent : IContentPackProvider
     {
         public string identifier => PonePackMain.GUID;
@@ -78,22 +67,7 @@ namespace PonePack
             //Write code here to initialize your mod post assetbundle load
             _ponePackBundle = asyncOperation.assetBundle;
 
-            PonePack.Survivors.Hazel = _ponePackBundle.LoadAsset<SurvivorDef>("HazelSurvivorDef");
-            PonePack.Survivors.Hazel.cachedName = "PotatoPone_Hazel";
-
-            PonePackContentPack.survivorDefs.Add(new SurvivorDef[] { PonePack.Survivors.Hazel });
-            //bool result = ContentAddition.AddSurvivorDef(PonePack.Survivors.Hazel);
-            //Debug.Log("!!!!! Was Hazel added: " + result);
-
-
-            //TODO: Automate this process
-            HurtBoxGroup hurtBoxGroup = PonePack.Survivors.Hazel.bodyPrefab.GetComponent<HurtBoxGroup>();
-            hurtBoxGroup.mainHurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal;
-            hurtBoxGroup.mainHurtBox.GetComponent<HurtBox>().hurtBoxGroup = hurtBoxGroup;
-
-            //ContentAddition.AddBody(PonePack.Survivors.Hazel.bodyPrefab);
-            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { PonePack.Survivors.Hazel.bodyPrefab });
-
+            PonePack.Survivors.Hazel.Initialize(_ponePackBundle);
 
             LoadItemDefs();
             LoadEquipmentDefs();
@@ -101,14 +75,6 @@ namespace PonePack
             LoadProcTypes();
             LoadNetworkObjectPrefabs();
             LoadHooks();
-
-            // Hazel turret master prefab
-            PonePack.MasterPrefabs.HazelTurretMaster = _ponePackBundle.LoadAsset<GameObject>("HazelTurretMaster");
-            PonePackContentPack.masterPrefabs.Add(new GameObject[] { PonePack.MasterPrefabs.HazelTurretMaster });
-
-            // Hazel turret body prefab
-            PonePack.BodyPrefabs.HazelBodyPrefab = _ponePackBundle.LoadAsset<GameObject>("HazelTurretBody");
-            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { PonePack.BodyPrefabs.HazelBodyPrefab });
         }
         public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
         {

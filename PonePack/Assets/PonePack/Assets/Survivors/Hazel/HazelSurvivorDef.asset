@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: HazelSurvivorDef
   m_EditorClassIdentifier: 
   bodyPrefab: {fileID: 6270045499175486717, guid: 35e8058cbc7afb5418ec1217b95928bc, type: 3}
-  displayPrefab: {fileID: 1083028349073906485, guid: 9a568d4a5dbac53449412025bcc19bfa, type: 3}
+  displayPrefab: {fileID: 2344561312353628993, guid: 5790dfdae4dadd3468e3791bd20e2157, type: 3}
   unlockableName: 
   unlockableDef: {fileID: 0}
   displayNameToken: Hazel
   descriptionToken: Hazel's description
   outroFlavorToken: Hazel won
   mainEndingEscapeFailureFlavorToken: Hazel lost
-  primaryColor: {r: 0, g: 0, b: 0, a: 0}
-  desiredSortPosition: 1
+  primaryColor: {r: 0.24318251, g: 0.76460713, b: 0.9547169, a: 0}
+  desiredSortPosition: 0
   hidden: 0

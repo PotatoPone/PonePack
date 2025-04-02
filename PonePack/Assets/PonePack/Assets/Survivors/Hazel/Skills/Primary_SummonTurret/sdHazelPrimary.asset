@@ -23,7 +23,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   interruptPriority: 1
   baseRechargeInterval: 1
-  baseMaxStock: 1
+  baseMaxStock: 10
   rechargeStock: 1
   requiredStock: 1
   stockToConsume: 1
@@ -33,7 +33,7 @@ MonoBehaviour:
   fullRestockOnAssign: 1
   dontAllowPastMaxStocks: 0
   beginSkillCooldownOnSkillEnd: 0
-  cancelSprintingOnActivation: 1
+  cancelSprintingOnActivation: 0
   forceSprintDuringState: 0
   canceledFromSprinting: 0
   isCombatSkill: 1
