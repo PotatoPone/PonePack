@@ -150,7 +150,8 @@ namespace PonePack
                 if (Vector3.Distance(teamComponent.body.corePosition, this.body.corePosition) > CalculateRange()) continue;
 
                 teamMembersInRange.Add(teamComponent);
-                tetheredTransforms.Add(teamComponent.body.coreTransform);
+                //tetheredTransforms.Add(teamComponent.body.coreTransform);
+                tetheredTransforms.Add(teamComponent.body.mainHurtBox.transform);
             }
 
             // Update target transforms for the VFX

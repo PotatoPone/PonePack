@@ -36,12 +36,12 @@ namespace PonePack
 
         public void Terminate()
         {
-            //if (this.fadeOut)
-            //{
-            //    Debug.Log("FadeOut is enabled");
-            //    this.fadeOut.enabled = true;
-            //    return;
-            //}
+            if (this.fadeOut)
+            {
+                Debug.Log("FadeOut is enabled");
+                this.fadeOut.enabled = true;
+                return;
+            }
             UnityEngine.Object.Destroy(base.gameObject);
         }
     }

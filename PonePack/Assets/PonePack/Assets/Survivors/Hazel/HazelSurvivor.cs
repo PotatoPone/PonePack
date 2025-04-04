@@ -6,6 +6,9 @@ using R2API;
 using System.Runtime.Serialization;
 using RoR2.Skills;
 using Assets.RoR2.Scripts.Platform;
+using On;
+using System;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 namespace PonePack.Survivors
 {
@@ -13,8 +16,13 @@ namespace PonePack.Survivors
     {
         public static SurvivorDef survivorDef;
 
+        //Healing Bomb
+        public static GameObject hazelHealingBombProjectile;
+
+        //Turret
         public static GameObject hazelTurretMaster;
         public static GameObject hazelTurretBody;
+        public static GameObject hazelTurretProjectile;
         public static DeployableSlot hazelTurretDeployableSlot;
 
         //Skills
@@ -44,25 +52,10 @@ namespace PonePack.Survivors
             PonePackContentPack.bodyPrefabs.Add(new GameObject[] { survivorDef.bodyPrefab });
 
 
-            // Turret
-
-            //Add TurretMaster
-            hazelTurretMaster = bundle.LoadAsset<GameObject>("HazelTurretMaster");
-            PonePackContentPack.masterPrefabs.Add(new GameObject[] { hazelTurretMaster });
-
-            //Add TurretBody
-            hazelTurretBody = bundle.LoadAsset<GameObject>("HazelTurretBody");
-            hazelTurretBody.layer = LayerIndex.playerFakeActor.intVal;
-            hazelTurretBody.GetComponent<ModelLocator>().modelTransform.GetComponent<HurtBoxGroup>().mainHurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal; //Set the turretBody's hurtbox layer
-            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { hazelTurretBody });
-
-            //Register new deployable
-            DeployableAPI.GetDeployableSameSlotLimit deployableSameSlotLimit = delegate (CharacterMaster master, int intVal)
-            {
-                //TODO: Make this equal to the max stock count of the primary skill
-                return primarySkillFamily.variants[0].skillDef.baseMaxStock;
-            };
-            hazelTurretDeployableSlot = DeployableAPI.RegisterDeployableSlot(deployableSameSlotLimit);
+            InitHealingBomb(bundle);
+            InitTurret(bundle);
+            InitTeleport(bundle);
+            InitSummon(bundle);
 
             //Skills
             primarySkillFamily = bundle.LoadAsset<SkillFamily>("sfHazelPrimary");
@@ -79,11 +72,60 @@ namespace PonePack.Survivors
 
             hazelTurretSkillDef = bundle.LoadAsset<SkillDef>("HazelTurretPrimarySkill");
             PonePackContentPack.skillDefs.Add(new SkillDef[] { hazelTurretSkillDef });
+        }
 
-            PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.HazelTurret.SpawnState) });
+        private static void InitHealingBomb(AssetBundle bundle)
+        {
+            hazelHealingBombProjectile = bundle.LoadAsset<GameObject>("HazelHealingBombProjectile");
+            hazelHealingBombProjectile.layer = LayerIndex.projectile.intVal;
+            PonePackContentPack.projectilePrefabs.Add(new GameObject[] { hazelHealingBombProjectile });
+
+            PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.FireHealingBomb) });
+        }
+
+        private static void InitTurret(AssetBundle bundle)
+        {
+            //Add TurretMaster
+            hazelTurretMaster = bundle.LoadAsset<GameObject>("HazelTurretMaster");
+            PonePackContentPack.masterPrefabs.Add(new GameObject[] { hazelTurretMaster });
+
+            //Add TurretBody
+            hazelTurretBody = bundle.LoadAsset<GameObject>("HazelTurretBody");
+            hazelTurretBody.layer = LayerIndex.playerFakeActor.intVal;
+            //hazelTurretBody.layer = LayerIndex.entityPrecise.intVal;
+            hazelTurretBody.GetComponent<ModelLocator>().modelTransform.GetComponent<HurtBoxGroup>().mainHurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal; //Set the turretBody's hurtbox layer
+            PonePackContentPack.bodyPrefabs.Add(new GameObject[] { hazelTurretBody });
+
+            //Add TurretProjectile
+            hazelTurretProjectile = bundle.LoadAsset<GameObject>("HazelTurretProjectile");
+            hazelTurretProjectile.layer = LayerIndex.projectile.intVal;
+            PonePackContentPack.projectilePrefabs.Add(new GameObject[] { hazelTurretProjectile });
+
+            //Register new deployable
+            DeployableAPI.GetDeployableSameSlotLimit deployableSameSlotLimit = delegate (CharacterMaster master, int intVal)
+            {
+                int baseStock = secondarySkillFamily.variants[0].skillDef.baseMaxStock;
+                int backupMagCount = master.inventory.GetItemCount(RoR2.RoR2Content.Items.SecondarySkillMagazine);
+                int newStock = baseStock + backupMagCount;
+                return newStock;
+            };
+            hazelTurretDeployableSlot = DeployableAPI.RegisterDeployableSlot(deployableSameSlotLimit);
+
+            PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.FireTurretSummon) });
             PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.HazelTurret.DeathState) });
+            PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.HazelTurret.WaitForStick) });
             PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.HazelTurret.DeployTurret) });
             PonePackContentPack.entityStateTypes.Add(new System.Type[] { typeof(PonePack.EntityStates.Hazel.HazelTurret.FireHazelTurret) });
+        }
+
+        private static void InitTeleport(AssetBundle bundle)
+        {
+
+        }
+
+        private static void InitSummon(AssetBundle bundle)
+        {
+
         }
 
         private static void AddSkillFamily(SkillFamily skillFamily)

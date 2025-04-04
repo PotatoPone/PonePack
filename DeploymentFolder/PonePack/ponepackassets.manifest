@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 972402868
+CRC: 2679961511
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 136eb04ba378c632c20b82da697a120c
+    Hash: 7ce5482ed3d56e8881e056c5d4d4caf5
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1c846be298b8da3b8438aa6d4fdb899c
+    Hash: 554d8c54ddbdd0f6becec8d3a5dbf01f
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -34,21 +34,25 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 1143142494, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 1220875036, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: c9036326ea8c60744877e71e13bcf187, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c51c612f8b7e834448c921b742479149, type: 3}
 - Class: 114
   Script: {fileID: 1392865457, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -2005973111, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1811796171, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-- Class: 114
-  Script: {fileID: -2051541306, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -46258121, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -75,8 +79,6 @@ ClassTypes:
   Script: {fileID: -226763392, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 662316482, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-- Class: 114
-  Script: {fileID: 89795172, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1512808244, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -110,6 +112,18 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 1918207524, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: -1848696948, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1790887305, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -270136354, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1819008361, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 664490745, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 717380117, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: -517518216, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -789927658, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -125,6 +139,8 @@ ClassTypes:
   Script: {fileID: -1881990681, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -315171339, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1895344032, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 81a6f32c4710cad44aec7a3cdc7c8384, type: 3}
 - Class: 114
@@ -154,14 +170,6 @@ SerializeReferenceClassIdentifiers:
   ClassName: HG.BlendableTypes.BlendableFloat
 - AssemblyName: HGUnityUtils
   ClassName: HG.BlendableTypes.BlendableVector3
-- AssemblyName: HGUnityUtils
-  ClassName: HG.GeneralSerializer.SerializedField
-- AssemblyName: HGUnityUtils
-  ClassName: HG.GeneralSerializer.SerializedFieldCollection
-- AssemblyName: HGUnityUtils
-  ClassName: HG.GeneralSerializer.SerializedValue
-- AssemblyName: HGUnityUtils
-  ClassName: HG.SerializableSystemType
 - AssemblyName: RoR2
   ClassName: ChildLocator/NameTransformPair
 - AssemblyName: RoR2
@@ -174,6 +182,8 @@ SerializeReferenceClassIdentifiers:
   ClassName: RoR2.CharacterGravityParameters
 - AssemblyName: RoR2
   ClassName: RoR2.CharacterModel/RendererInfo
+- AssemblyName: RoR2
+  ClassName: RoR2.DamageTypeCombo
 - AssemblyName: RoR2
   ClassName: RoR2.MageElement
 - AssemblyName: RoR2
@@ -193,49 +203,46 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: com.unity.multiplayer-hlapi.Runtime
   ClassName: UnityEngine.Networking.NetworkSceneId
 Assets:
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkRangeIndicatorMaterial.mat
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainTexture.png
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelUtility.asset
+- Assets/PonePack/Assets/Survivors/Hazel/HazelDisplay.prefab
 - Assets/PonePack/Assets/Survivors/Common/StandardCameraParams.asset
+- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLink.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/HazelTurretMaster.prefab
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/HazelTurretBody.prefab
-- Assets/PonePack/Assets/Survivors/Hazel/HazelCameraParams.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/HazelTurretPrimaryFamily.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/HazelTurretPrimarySkill.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/HazelTurretProjectile.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretMaster.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretBody.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretBody_backup.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretPrimaryFamily.asset
+- Assets/PonePack/Assets/Equipment/ShareItemPool/ShareItemPoolAttachment.prefab
 - Assets/PonePack/Assets/Buffs/healthLinkBuffIcon.png
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainNormal.png
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelSpecial.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/sdHazelPrimary.asset
-- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherMaterial.mat
-- Assets/PonePack/Assets/Items/HealthLink/Model/TopChain_Mat.mat
-- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Metallic.png
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/escHazelTurretFire.asset
-- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherVFX.prefab
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/escHazelTurretDeathState.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/escDeployTurret.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/escWaitForStick.asset
-- Assets/PonePack/Assets/Survivors/Hazel/HazelSurvivorDef.asset
-- Assets/PonePack/Assets/Items/HealthLink/Model/Nugget_Mat.mat
-- Assets/PonePack/Assets/Items/HealthLink/healthLinkIcon.png
-- Assets/PonePack/Assets/Items/HealthLink/Model/BottomChain_Mat.mat
-- Assets/PonePack/Assets/Items/HealthLink/HealthLinkRangeIndicatorMaterial.mat
-- Assets/PonePack/Assets/Survivors/Hazel/HazelDisplay_Orig.prefab
-- Assets/PonePack/Assets/Items/HealthLink/Model/chainTexture.png
-- Assets/PonePack/Assets/Survivors/Hazel/HazelDisplay.prefab
-- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether.png
-- Assets/PonePack/Assets/Equipment/ShareItemPool/ShareItemPoolAttachment.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelPrimary.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/physmatHazelTurret.physicMaterial
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/Primary_SummonTurret/Turret/escHazelTurretSpawnState.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelSpecial.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/HazelTurretProjectileGhost.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/HazelBody.prefab
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainModel.fbx
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelSecondary.asset
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherMaterial.mat
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/sdHazelSecondary.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/physmatHazelTurretProjectile.physicMaterial
 - Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Normal.png
+- Assets/PonePack/Assets/Items/HealthLink/Model/TopChain_Mat.mat
+- Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Metallic.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkBodyAttachment.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelPrimary.asset
+- Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherVFX.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/FBX/hazel.fbx
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretPrimarySkill.asset
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelSecondary.asset
+- Assets/PonePack/Assets/Survivors/Hazel/HazelSurvivorDef.asset
+- Assets/PonePack/Assets/Items/HealthLink/Model/Nugget_Mat.mat
 - Assets/PonePack/Assets/Buffs/HealthLinkBuff.asset
 - Assets/PonePack/Assets/Equipment/ShareItemPool/ShareItemPool.asset
+- Assets/PonePack/Assets/Items/HealthLink/healthLinkIcon.png
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelUtility.asset
-- Assets/PonePack/Assets/Items/HealthLink/Model/chainModelHitbox.prefab
+- Assets/PonePack/Assets/Survivors/Hazel/HazelCameraParams.asset
+- Assets/PonePack/Assets/Items/HealthLink/Model/BottomChain_Mat.mat
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelSpecial.asset
+- Assets/PonePack/Assets/Items/HealthLink/Model/chainModelHitbox.prefab
 Dependencies: []
