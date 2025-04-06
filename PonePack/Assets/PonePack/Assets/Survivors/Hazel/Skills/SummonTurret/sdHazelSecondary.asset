@@ -21,7 +21,7 @@ MonoBehaviour:
   activationState:
     _typeName: PonePack.EntityStates.Hazel.FireTurretSummon, PonePack, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  interruptPriority: 1
+  interruptPriority: 2
   baseRechargeInterval: 5
   baseMaxStock: 6
   rechargeStock: 1

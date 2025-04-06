@@ -9,6 +9,7 @@ using Assets.RoR2.Scripts.Platform;
 using On;
 using System;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
+using RoR2.Projectile;
 
 namespace PonePack.Survivors
 {
@@ -92,7 +93,6 @@ namespace PonePack.Survivors
             //Add TurretBody
             hazelTurretBody = bundle.LoadAsset<GameObject>("HazelTurretBody");
             hazelTurretBody.layer = LayerIndex.playerFakeActor.intVal;
-            //hazelTurretBody.layer = LayerIndex.entityPrecise.intVal;
             hazelTurretBody.GetComponent<ModelLocator>().modelTransform.GetComponent<HurtBoxGroup>().mainHurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal; //Set the turretBody's hurtbox layer
             PonePackContentPack.bodyPrefabs.Add(new GameObject[] { hazelTurretBody });
 

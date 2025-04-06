@@ -94,17 +94,18 @@ GameObject:
   - component: {fileID: 5694153494684029069}
   - component: {fileID: 9184198569459932099}
   - component: {fileID: 6784027236210478543}
-  - component: {fileID: 2401591164049353946}
+  - component: {fileID: -1673245921050902611}
   - component: {fileID: 8579449345170223201}
   - component: {fileID: 4274930696836228957}
   - component: {fileID: 5597453672295682201}
   - component: {fileID: 8124860582301331500}
-  - component: {fileID: 5009688212619889618}
   - component: {fileID: 8574109991827861759}
   - component: {fileID: 4759869365479511408}
   - component: {fileID: 1051041865564456231}
   - component: {fileID: 2353312557292762173}
   - component: {fileID: 5811432418381585520}
+  - component: {fileID: 4632481530767274849}
+  - component: {fileID: 7994588755087052595}
   m_Layer: 0
   m_Name: HazelTurretProjectile
   m_TagString: Untagged
@@ -160,7 +161,7 @@ MonoBehaviour:
     i14: 0
     i15: 0
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &6784027236210478543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultTeam: -1
---- !u!114 &2401591164049353946
+--- !u!114 &-1673245921050902611
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,7 +195,7 @@ MonoBehaviour:
   authorityHandlesCollisionEvents: 0
   flightSoundLoop: {fileID: 0}
   canImpactOnTrigger: 0
-  allowPrediction: 0
+  allowPrediction: 1
   owner: {fileID: 0}
   localCollisionHappened: 0
   procCoefficient: 1
@@ -282,26 +283,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &5009688212619889618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5694153494684029066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 664490745, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stickSoundString: 
-  stickParticleSystem: []
-  ignoreCharacters: 0
-  ignoreWorld: 0
-  alignNormals: 1
-  stickEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!135 &8574109991827861759
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -386,3 +367,42 @@ MonoBehaviour:
   onTargetLost:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4632481530767274849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5694153494684029066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 353067543, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impactEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7994588755087052595}
+        m_TargetAssemblyTypeName: PonePack.ProjectileSpawnTurret, PonePack
+        m_MethodName: SpawnTurret
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7994588755087052595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5694153494684029066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d901a0827a3516f49a0312e7ebcd6946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

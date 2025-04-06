@@ -48,6 +48,7 @@ namespace PonePack.EntityStates.Hazel
             //}
             if (base.isAuthority)
             {
+                Debug.Log("SummonTurret projectile fired!");
                 FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
                 {
                     projectilePrefab = PonePack.Survivors.Hazel.hazelTurretProjectile,
@@ -66,7 +67,7 @@ namespace PonePack.EntityStates.Hazel
         {
             base.FixedUpdate();
 
-            if (base.fixedAge >= this.duration && base.isAuthority)
+            if (base.fixedAge > this.duration && base.isAuthority)
             {
                 this.outer.SetNextStateToMain();
                 return;

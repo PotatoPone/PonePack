@@ -21,8 +21,8 @@ MonoBehaviour:
   activationState:
     _typeName: PonePack.EntityStates.Hazel.FireHealingBomb, PonePack, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  interruptPriority: 1
-  baseRechargeInterval: 1
+  interruptPriority: 2
+  baseRechargeInterval: 0
   baseMaxStock: 1
   rechargeStock: 1
   requiredStock: 1

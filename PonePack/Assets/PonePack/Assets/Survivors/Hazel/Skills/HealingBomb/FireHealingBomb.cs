@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RoR2;
+using System;
 
 namespace PonePack.EntityStates.Hazel
 {
@@ -11,23 +12,30 @@ namespace PonePack.EntityStates.Hazel
     {
         public static GameObject effectPrefab;
         public static GameObject hitEffectPrefab;
-        private float damageCoefficient = 1f;
-        private float force = 200f;
-        private static float baseDuration = 1f;
+        public static float damageCoefficient = 1f;
+        public static float healingCoefficient = 1f;
+        public static float force = 200f;
+        public static float baseDuration = 1f;
+
         private float duration;
 
         public override void OnEnter()
         {
             base.OnEnter();
 
+            //On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact += OnProjectileImpact;
+
             //if (base.GetModelAnimator())
             //{
             //    base.PlayAnimation("Body", SpawnState.SpawnStateHash, SpawnState.SpawnParamHash, 1.5f);
             //}
-
-            this.duration = baseDuration / this.attackSpeedStat;
+            Debug.Log("BaseDuration: " + FireHealingBomb.baseDuration);
+            this.duration = FireHealingBomb.baseDuration / this.attackSpeedStat;
+            Debug.Log("Duration: " + this.duration);
             Ray aimRay = base.GetAimRay();
             base.StartAimMode(aimRay, 2f, false);
+
+
             //if (base.GetModelAnimator())
             //{
             //    float num = this.duration * 0.3f;
@@ -40,14 +48,15 @@ namespace PonePack.EntityStates.Hazel
             //}
             if (base.isAuthority)
             {
+                Debug.Log("HealingBomb projectile fired!");
                 FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
                 {
                     projectilePrefab = PonePack.Survivors.Hazel.hazelHealingBombProjectile,
                     position = aimRay.origin,
                     rotation = Util.QuaternionSafeLookRotation(aimRay.direction),
                     owner = base.gameObject,
-                    damage = this.damageStat * this.damageCoefficient,
-                    force = this.force,
+                    damage = this.damageStat * FireHealingBomb.damageCoefficient,
+                    force = FireHealingBomb.force,
                     crit = Util.CheckRoll(this.critStat, base.characterBody.master)
                 };
                 ProjectileManager.instance.FireProjectile(fireProjectileInfo);
@@ -63,11 +72,15 @@ namespace PonePack.EntityStates.Hazel
         {
             base.FixedUpdate();
 
-            if (base.fixedAge >= this.duration && base.isAuthority)
+            if (base.fixedAge > this.duration && base.isAuthority)
             {
                 this.outer.SetNextStateToMain();
                 return;
             }
+        }
+        public override InterruptPriority GetMinimumInterruptPriority()
+        {
+            return InterruptPriority.PrioritySkill;
         }
     }
 }

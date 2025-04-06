@@ -16,30 +16,20 @@ namespace PonePack.EntityStates.Hazel.HazelTurret
         public override void OnEnter()
         {
             base.OnEnter();
-            this.projectileStickOnImpact = base.GetComponent<ProjectileStickOnImpact>();
-            //this.armingStateMachine = EntityStateMachine.FindByCustomName(base.gameObject, "Arming");
-            if (this.projectileStickOnImpact.enabled != true)
-            {
-                this.projectileStickOnImpact.enabled = true;
-            }
-            //Util.PlaySound(this.enterSoundString, base.gameObject);
-
-            //if (NetworkServer.active)
+            //this.projectileStickOnImpact = base.GetComponent<ProjectileStickOnImpact>();
+            //if (this.projectileStickOnImpact.enabled != true)
             //{
-            //    armingStateMachine.SetNextState(new MineArmingUnarmed());
+            //    this.projectileStickOnImpact.enabled = true;
             //}
+            //Util.PlaySound(this.enterSoundString, base.gameObject);
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            //if (NetworkServer.active && this.shouldRevertToWaitForStickOnSurfaceLost && !this.projectileStickOnImpact.stuck)
-            //{
-            //    this.outer.SetNextState(new WaitForStickState());
-            //}
 
             //Projectile has stuck and should spawn the turret
-            if (NetworkServer.active && projectileStickOnImpact.stuck)
+            if (NetworkServer.active) //&& projectileStickOnImpact.stuck
             {
                 this.outer.SetNextStateToMain();
                 return;
