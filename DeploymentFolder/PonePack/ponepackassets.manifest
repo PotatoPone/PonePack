@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4033153598
+CRC: 2988568627
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 892bebc7f0203e02c81dc9b155ed5815
+    Hash: ce626990459dabdd3d7bc23493d04d89
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d91b080819f10666372887c267369ee8
+    Hash: 7bcb2cacb305333528cc0f06b0e43a8b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -84,6 +84,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 662316482, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 89795172, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 1512808244, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1144835783, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -155,6 +157,10 @@ ClassTypes:
   Script: {fileID: 11500000, guid: e0d71a06c633ec94c9ee3f3d2f273939, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 42c241bf49e5ac540b9dd76b29f22690, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 14a98446839284647a2cc8ac700dc9b8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 080ea1bc5850373448b37cc710245ea3, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 120
@@ -176,6 +182,14 @@ SerializeReferenceClassIdentifiers:
   ClassName: HG.BlendableTypes.BlendableFloat
 - AssemblyName: HGUnityUtils
   ClassName: HG.BlendableTypes.BlendableVector3
+- AssemblyName: HGUnityUtils
+  ClassName: HG.GeneralSerializer.SerializedField
+- AssemblyName: HGUnityUtils
+  ClassName: HG.GeneralSerializer.SerializedFieldCollection
+- AssemblyName: HGUnityUtils
+  ClassName: HG.GeneralSerializer.SerializedValue
+- AssemblyName: HGUnityUtils
+  ClassName: HG.SerializableSystemType
 - AssemblyName: RoR2
   ClassName: ChildLocator/NameTransformPair
 - AssemblyName: RoR2
@@ -218,21 +232,23 @@ Assets:
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretMaster.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretBody.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretPrimaryFamily.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretPrimarySkill.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/FireHazelTurret.asset
 - Assets/PonePack/Assets/Buffs/healthLinkBuffIcon.png
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainNormal.png
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/PonePack.EntityStates.Hazel.HazelTurret.FireHazelTurret.asset
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelSpecial.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/HealingBomb/sdHazelPrimary.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/HealingBomb/FireHealingBomb.asset
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherMaterial.mat
 - Assets/PonePack/Assets/Items/HealthLink/Model/TopChain_Mat.mat
 - Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Metallic.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkTetherVFX.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/HazelSurvivorDef.asset
 - Assets/PonePack/Assets/Items/HealthLink/Model/Nugget_Mat.mat
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/PonePack.EntityStates.Hazel.HazelTurret.DeathState.asset
 - Assets/PonePack/Assets/Items/HealthLink/healthLinkIcon.png
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/HealingBomb/PonePack.EntityStates.Hazel.FireHealingBomb.asset
 - Assets/PonePack/Assets/Survivors/Hazel/HazelCameraParams.asset
 - Assets/PonePack/Assets/Items/HealthLink/Model/BottomChain_Mat.mat
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/Turret/HazelTurretBody_backup.prefab
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkRangeIndicatorMaterial.mat
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainTexture.png
 - Assets/PonePack/Assets/Survivors/Hazel/HazelDisplay.prefab
@@ -244,7 +260,7 @@ Assets:
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/HazelTurretProjectileGhost.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/HazelBody.prefab
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainModel.fbx
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/sdHazelSecondary.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/SummonTurret.asset
 - Assets/PonePack/Assets/Items/HealthLink/Tether/chainTether_Normal.png
 - Assets/PonePack/Assets/Items/HealthLink/HealthLinkBodyAttachment.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/HealingBomb/HazelHealingBombGhost.prefab
@@ -252,7 +268,8 @@ Assets:
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelSecondary.asset
 - Assets/PonePack/Assets/Buffs/HealthLinkBuff.asset
 - Assets/PonePack/Assets/Equipment/ShareItemPool/ShareItemPool.asset
-- Assets/PonePack/Assets/Survivors/Hazel/Skills/sdHazelUtility.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/SummonTurret/PonePack.EntityStates.Hazel.FireSummonTurret.asset
+- Assets/PonePack/Assets/Survivors/Hazel/Skills/Teleport/HazelTeleport.asset
 - Assets/PonePack/Assets/Items/HealthLink/Model/chainModelHitbox.prefab
 - Assets/PonePack/Assets/Survivors/Hazel/Skills/sfHazelSpecial.asset
 Dependencies: []

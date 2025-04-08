@@ -21,8 +21,6 @@ namespace PonePack
 
         public void HealNerbyAllies(ProjectileImpactInfo impactInfo)
         {
-            Debug.Log("Impact");
-
             List<HurtBox> foundHurtBoxes = new List<HurtBox>();
             SphereSearch sphereSearch = new SphereSearch();
             sphereSearch.mask = LayerIndex.entityPrecise.mask;
@@ -42,9 +40,8 @@ namespace PonePack
             {
                 if (!hurtBox.healthComponent) continue;
                 float healAmount = this.projectileDamage.damage * this.healingCoefficient;
-                Debug.Log("Healing " + hurtBox.gameObject + " for " + healAmount);
-                hurtBox.healthComponent.Heal(healAmount, default(ProcChainMask), true);
-                //hurtBox.healthComponent.HealFraction(0.1f, default(ProcChainMask));
+                //hurtBox.healthComponent.Heal(healAmount, default(ProcChainMask), true);
+                hurtBox.healthComponent.HealFraction(0.1f, default(ProcChainMask));
             }
         }
     }

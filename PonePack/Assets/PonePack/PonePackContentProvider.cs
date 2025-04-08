@@ -53,7 +53,7 @@ namespace PonePack
         public static ReadOnlyContentPack readOnlyContentPack => new ReadOnlyContentPack(PonePackContentPack);
         internal static ContentPack PonePackContentPack { get; } = new ContentPack();
 
-        private static AssetBundle _ponePackBundle;
+        protected static AssetBundle _ponePackBundle { get; private set; }
 
         public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
         {
@@ -67,7 +67,7 @@ namespace PonePack
             //Write code here to initialize your mod post assetbundle load
             _ponePackBundle = asyncOperation.assetBundle;
 
-            PonePack.Survivors.Hazel.Initialize(_ponePackBundle);
+            PonePack.Survivors.Hazel.Initialize();
 
             LoadItemDefs();
             LoadEquipmentDefs();

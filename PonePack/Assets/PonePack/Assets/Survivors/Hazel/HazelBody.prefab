@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 7330285196467664636}
   - component: {fileID: 4731225608117830695}
   - component: {fileID: -4152072858652458484}
+  - component: {fileID: -1899978162245972820}
   m_Layer: 0
   m_Name: HazelBody
   m_TagString: Player
@@ -877,6 +878,22 @@ MonoBehaviour:
   - {fileID: 4708268764832926567}
   mainHurtBox: {fileID: 4708268764832926567}
   bullseyeCount: 1
+--- !u!114 &-1899978162245972820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270045499175486717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 080ea1bc5850373448b37cc710245ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackingPrefab: {fileID: 0}
+  maxTrackingDistance: 500
+  maxTrackingAngle: 20
+  trackerUpdateFrequency: 10
 --- !u!1001 &6342226760420958152
 PrefabInstance:
   m_ObjectHideFlags: 0

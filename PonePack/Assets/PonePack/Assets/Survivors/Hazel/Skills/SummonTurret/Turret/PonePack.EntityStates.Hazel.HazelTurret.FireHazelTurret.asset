@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 89795172, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: PonePack.EntityStates.Hazel.HazelTurret.FireHazelTurret
+  m_EditorClassIdentifier: 
+  targetType:
+    assemblyQualifiedName: PonePack.EntityStates.Hazel.HazelTurret.FireHazelTurret,
+      PonePack, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  serializedFieldsCollection:
+    serializedFields:
+    - fieldName: hitEffectPrefab
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: tracerEffectPrefab
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: damageCoefficient
+      fieldValue:
+        stringValue: 1
+        objectValue: {fileID: 0}
+    - fieldName: force
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: minSpread
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: maxSpread
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: bulletCount
+      fieldValue:
+        stringValue: 1
+        objectValue: {fileID: 0}
+    - fieldName: baseDuration
+      fieldValue:
+        stringValue: 0.5
+        objectValue: {fileID: 0}
+    - fieldName: maxDistance
+      fieldValue:
+        stringValue: 60
+        objectValue: {fileID: 0}
+    - fieldName: bulletRadius
+      fieldValue:
+        stringValue: 0.15
+        objectValue: {fileID: 0}
+    - fieldName: useSmartCollision
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: procCoefficient
+      fieldValue:
+        stringValue: 0.5
+        objectValue: {fileID: 0}
+    - fieldName: spreadPitchScale
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: spreadYawScale
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: spreadBloomValue
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: recoilAmplitudeY
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: recoilAmplitudeX
+      fieldValue:
+        stringValue: 0
+        objectValue: {fileID: 0}
+    - fieldName: muzzleName
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: fireSoundString
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}
+    - fieldName: muzzleFlashPrefab
+      fieldValue:
+        stringValue: 
+        objectValue: {fileID: 0}

@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6429221435688241609}
-  - component: {fileID: 9029258494347787704}
-  - component: {fileID: 7212772584066264888}
-  - component: {fileID: 5315885188446822167}
   - component: {fileID: 6430868261790760790}
+  - component: {fileID: -4996693846602839658}
+  - component: {fileID: -6930768433576703356}
   m_Layer: 0
   m_Name: HazelHealingBombGhost
   m_TagString: Untagged
@@ -29,13 +28,30 @@ Transform:
   m_GameObject: {fileID: 5648754366616798255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9029258494347787704
+--- !u!114 &6430868261790760790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5648754366616798255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emh: {fileID: 0}
+  inheritScaleFromProjectile: 1
+  ParentProjectileDestroyedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!33 &-4996693846602839658
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,7 +59,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5648754366616798255}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7212772584066264888
+--- !u!23 &-6930768433576703356
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,33 +101,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5315885188446822167
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5648754366616798255}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6430868261790760790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5648754366616798255}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emh: {fileID: 0}
-  inheritScaleFromProjectile: 0
-  ParentProjectileDestroyedEvent:
-    m_PersistentCalls:
-      m_Calls: []
