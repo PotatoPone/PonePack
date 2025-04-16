@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: HealthLink
+  m_EditorClassIdentifier: 
+  deprecatedTier: 3
+  _itemTierDef: {fileID: 0}
+  nameToken: Chains of Empathy
+  pickupToken: Healing <color=#FF7F7F>AND damage</color> received is shared with
+    nearby allies
+  descriptionToken: <color=#9CE562>Share 100%</color> <color=#909090><i>(+100% per
+    stack)</i></color> <color=#9CE562>of healing received,</color> <color=#FF7F7F>and
+    100%</color> <color=#909090><i>(+100% per stack)</i></color> <color=#FF7F7F>of
+    damage received</color>, with nearby allies
+  loreToken: LORE
+  unlockableDef: {fileID: 0}
+  pickupModelPrefab: {fileID: 2163651712814300577, guid: 13c85655705986542b3019d547d23dbe, type: 3}
+  pickupIconSprite: {fileID: 21300000, guid: 3ce9bf32f48f6674bafb8d4beacc1ddc, type: 3}
+  isConsumed: 0
+  hidden: 0
+  canRemove: 1
+  tags: 00000000
+  requiredExpansion: {fileID: 0}
