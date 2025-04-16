@@ -1,5 +1,6 @@
 using EntityStates;
 using RoR2;
+using RoR2.Projectile;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,11 +12,13 @@ namespace Druid.EntityStates
     {
         //public static float barrierCoefficient = 0.25f;
         public static float healFraction = 0.5f;
+        public static float healRadius = 20f;
 
         private DruidTracker druidTracker;
         private HurtBox target;
         private float stopwatch;
         private float baseDuration = 0f;
+        private List<HurtBox> alliesToHeal = new List<HurtBox>();
 
         public override void OnEnter()
         {
@@ -46,8 +49,35 @@ namespace Druid.EntityStates
 
             if (this.target.healthComponent && NetworkServer.active)
             {
-                this.target.healthComponent.HealFraction(healFraction, default(ProcChainMask));
+                //this.target.healthComponent.HealFraction(healFraction, default(ProcChainMask));
                 healthComponent.HealFraction(healFraction, default(ProcChainMask));
+                HealNerbyAllies(this.target.transform.position);
+            }
+        }
+
+        public void HealNerbyAllies(Vector3 origin)
+        {
+            SphereSearch sphereSearch = new SphereSearch();
+            sphereSearch.mask = LayerIndex.entityPrecise.mask;
+            sphereSearch.origin = origin;
+            sphereSearch.radius = healRadius;
+            sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
+            sphereSearch.RefreshCandidates();
+            TeamMask teamMask = TeamMask.none;
+            teamMask.AddTeam(TeamComponent.GetObjectTeam(base.gameObject));
+            sphereSearch.FilterCandidatesByHurtBoxTeam(teamMask);
+            sphereSearch.OrderCandidatesByDistance();
+            sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
+            sphereSearch.GetHurtBoxes(alliesToHeal);
+            sphereSearch.ClearCandidates();
+
+            foreach (HurtBox hurtBox in alliesToHeal)
+            {
+                if (!hurtBox.healthComponent) continue;
+                if (hurtBox.healthComponent == healthComponent) continue; //Don't heal yourself twice
+
+                hurtBox.healthComponent.HealFraction(healFraction, default(ProcChainMask));
+                Util.PlaySound("Play_item_proc_TPhealingNova_hitPlayer", hurtBox.healthComponent.body.gameObject);
             }
         }
 

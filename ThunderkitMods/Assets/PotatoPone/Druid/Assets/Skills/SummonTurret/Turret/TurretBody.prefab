@@ -119,8 +119,8 @@ MonoBehaviour:
   BaseImportance: 0
   Importance: -1
   inLava: 0
-  baseNameToken: Druid Turret
-  subtitleNameToken: Druid Turret Subtitle
+  baseNameToken: POTATOPONE_DRUID_TURRETBODY_NAME
+  subtitleNameToken: POTATOPONE_DRUID_TURRETBODY_SUBTITLE
   bodyFlags: 0
   lavaCooldown: 0.2
   rootMotionInMainState: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
   baseMoveSpeed: 0
   baseAcceleration: 0
   baseJumpPower: 0
-  baseDamage: 6
+  baseDamage: 10
   baseAttackSpeed: 1
   baseCrit: 1
   baseArmor: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   levelMaxShield: 0
   levelMoveSpeed: 0
   levelJumpPower: 0
-  levelDamage: 1.2
+  levelDamage: 2
   levelAttackSpeed: 0
   levelCrit: 0
   levelArmor: 0
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392798782539998680}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 161585894, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
@@ -506,6 +506,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51c612f8b7e834448c921b742479149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stickSoundString: 
+  stickParticleSystem: []
+  ignoreCharacters: 0
+  ignoreWorld: 0
+  alignNormals: 1
+  stickEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8949812986620309492
 MonoBehaviour:
   m_ObjectHideFlags: 0

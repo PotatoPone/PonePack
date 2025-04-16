@@ -1,0 +1,14 @@
+{
+  "strings": {
+    "POTATOPONE_DRUID_NAME": "Druid",
+    "POTATOPONE_DRUID_DESCRIPTION": "Druid description",
+	"POTATOPONE_DRUID_BODY_NAME": "Druid",
+	"POTATOPONE_DRUID_BODY_SUBTITLE": "Treehugger",
+	"POTATOPONE_DRUID_WIN": "...and so she left, ",
+	"POTATOPONE_DRUID_LOSE": "...and so she vanished, ",
+  },
+  "en": {
+    "POTATOPONE_DRUID_NAME": "Druid",
+    "POTATOPONE_DRUID_DESCRIPTION": "Druid description",
+  }
+}

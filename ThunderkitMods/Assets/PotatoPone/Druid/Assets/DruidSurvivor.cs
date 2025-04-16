@@ -51,7 +51,7 @@ namespace Druid
 
             //Add bodyPrefab to ContentPack
             survivorDef.bodyPrefab.RegisterNetworkPrefab(); //Network register test
-            survivorDef.bodyPrefab.GetComponent<CharacterBody>().AddBuff(RoR2.JunkContent.Buffs.IgnoreFallDamage); //Immune to fall damage
+            //survivorDef.bodyPrefab.GetComponent<CharacterBody>().AddBuff(RoR2.JunkContent.Buffs.IgnoreFallDamage); //Immune to fall damage
             DruidContentPack.bodyPrefabs.Add(new GameObject[] { survivorDef.bodyPrefab });
 
             //Skills

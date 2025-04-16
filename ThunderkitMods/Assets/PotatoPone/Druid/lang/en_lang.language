@@ -6,6 +6,8 @@
 	"POTATOPONE_DRUID_BODY_SUBTITLE": "Treehugger",
 	"POTATOPONE_DRUID_WIN": "...and so she left, ",
 	"POTATOPONE_DRUID_LOSE": "...and so she vanished, ",
+	"POTATOPONE_DRUID_TURRETBODY_NAME": "Druid Flower",
+	"POTATOPONE_DRUID_TURRETBODY_SUBTITLE": "Flower",
   },
   "en": {
     "POTATOPONE_DRUID_NAME": "Druid",

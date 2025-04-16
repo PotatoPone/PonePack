@@ -36,7 +36,8 @@ namespace Druid
 
             if (hitHurtBox && hitHurtBox.healthComponent && hitHurtBox.healthComponent.body)
             {
-                newTurretMaster.GetBody().GetComponent<StickToCharacter>().Stick(hitHurtBox.healthComponent.body, impactInfo.collider.transform);
+                //newTurretMaster.GetBody().GetComponent<StickToCharacter>().Stick(hitHurtBox.healthComponent.body, impactInfo.collider.transform);
+                newTurretMaster.GetBody().GetComponent<StickToCharacter>().Stick(impactInfo);
             }
 
             //test

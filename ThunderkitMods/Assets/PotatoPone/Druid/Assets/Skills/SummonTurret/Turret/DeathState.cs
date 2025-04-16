@@ -10,7 +10,9 @@ namespace Druid.EntityStates.DruidTurret
     public class DeathState : GenericCharacterDeath
     {
 
-        public static float healRadius = 20f;
+        public static float explosionRadius = 20f;
+        public static float explosionProcCoefficient = 1;
+        public static float explosionForce = 200f;
 
         [SerializeField]
         public GameObject initialExplosion;
@@ -59,8 +61,7 @@ namespace Druid.EntityStates.DruidTurret
                     //}, true);
                 }
 
-                HealNearbyTeammates();
-
+                Explode();
                 EntityState.Destroy(base.gameObject);
             }
         }
@@ -78,36 +79,52 @@ namespace Druid.EntityStates.DruidTurret
             base.OnExit();
         }
 
-        private void HealNearbyTeammates()
+        private void Explode()
         {
-            //float storedHealing = hazelTurretController.GetStoredHealing();
-            float storedHealing = druidTurretController.GetStoredDamage();
-            Debug.LogWarning("Healing nearby allies for " + storedHealing);
-            List<HurtBox> foundHurtBoxes = new List<HurtBox>();
+            float storedDamage = druidTurretController.GetStoredDamage();
+            Debug.LogWarning("Damaging nearby enemies for " + storedDamage);
 
-            SphereSearch sphereSearch = new SphereSearch();
-            sphereSearch.mask = LayerIndex.entityPrecise.mask;
-            sphereSearch.origin = base.transform.position;
-            sphereSearch.radius = DeathState.healRadius;
-            sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
-            sphereSearch.RefreshCandidates();
-            TeamMask teamMask = TeamMask.none;
-            teamMask.AddTeam(TeamIndex.Player); //Change to the turret's team, for the possibility of an enemy Hazel
-            sphereSearch.FilterCandidatesByHurtBoxTeam(teamMask);
-            sphereSearch.OrderCandidatesByDistance();
-            sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
-            sphereSearch.GetHurtBoxes(foundHurtBoxes);
-            sphereSearch.ClearCandidates();
+            BlastAttack blastAttack = new BlastAttack();
+            blastAttack.radius = explosionRadius;
+            blastAttack.procCoefficient = explosionProcCoefficient;
+            blastAttack.position = base.transform.position;
+            blastAttack.attacker = base.gameObject;
+            blastAttack.crit = Util.CheckRoll(base.characterBody.crit, base.characterBody.master);
+            blastAttack.baseDamage = storedDamage;
+            blastAttack.falloffModel = BlastAttack.FalloffModel.None;
+            blastAttack.damageType = DamageType.AOE;
+            blastAttack.baseForce = explosionForce;
+            blastAttack.teamIndex = TeamComponent.GetObjectTeam(base.gameObject);
+            blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
+            blastAttack.damageType.damageSource = DamageSource.Hazard;
+            blastAttack.Fire();
 
-            foreach (HurtBox hurtBox in foundHurtBoxes)
-            {
-                if (!hurtBox.healthComponent) continue;
-                if (hurtBox.healthComponent == base.healthComponent) continue; //Don't heal yourself
-                if (hurtBox.healthComponent.alive == false) continue;
+            //List<HurtBox> foundHurtBoxes = new List<HurtBox>();
 
-                //Add HealingFromDyingTurret ProcChainMask
-                hurtBox.healthComponent.Heal(storedHealing, default(ProcChainMask), true);
-            }
+            //SphereSearch sphereSearch = new SphereSearch();
+            //sphereSearch.mask = LayerIndex.entityPrecise.mask;
+            //sphereSearch.origin = base.transform.position;
+            //sphereSearch.radius = damageRadius;
+            //sphereSearch.queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
+            //sphereSearch.RefreshCandidates();
+            //sphereSearch.FilterCandidatesByHurtBoxTeam(TeamMask.GetEnemyTeams(TeamComponent.GetObjectTeam(base.gameObject)));
+            //sphereSearch.OrderCandidatesByDistance();
+            //sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
+            //sphereSearch.GetHurtBoxes(foundHurtBoxes);
+            //sphereSearch.ClearCandidates();
+
+            //DamageInfo damageInfo = new DamageInfo();
+            //damageInfo.damage = storedDamage;
+
+            //foreach (HurtBox hurtBox in foundHurtBoxes)
+            //{
+            //    if (!hurtBox.healthComponent) continue;
+            //    if (hurtBox.healthComponent.alive == false) continue;
+
+            //    //Add HealingFromDyingTurret ProcChainMask
+            //    //hurtBox.healthComponent.Heal(storedHealing, default(ProcChainMask), true);
+            //    hurtBox.healthComponent.TakeDamage();
+            //}
         }
     }
 }

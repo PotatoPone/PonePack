@@ -31,7 +31,7 @@ MonoBehaviour:
   StagingPaths:
   - <ManifestPluginStaging>
   Author: PotatoPone
-  Name: Druid
+  Name: PotatoPone-Druid
   Description: Druid description
   Version: 0.0.1
   Dependencies:

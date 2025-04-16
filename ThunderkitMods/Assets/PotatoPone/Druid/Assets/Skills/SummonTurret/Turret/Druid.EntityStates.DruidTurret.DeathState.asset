@@ -25,7 +25,15 @@ MonoBehaviour:
       fieldValue:
         stringValue: 
         objectValue: {fileID: 0}
-    - fieldName: healRadius
+    - fieldName: explosionRadius
       fieldValue:
         stringValue: 20
+        objectValue: {fileID: 0}
+    - fieldName: explosionProcCoefficient
+      fieldValue:
+        stringValue: 1
+        objectValue: {fileID: 0}
+    - fieldName: explosionForce
+      fieldValue:
+        stringValue: 500
         objectValue: {fileID: 0}
