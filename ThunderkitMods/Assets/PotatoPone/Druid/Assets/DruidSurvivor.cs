@@ -19,6 +19,7 @@ namespace Druid
 
         //Healing Bomb
         public static GameObject healingBombProjectile;
+        public static GameObject piercingThornProjectile;
 
         //Turret
         public static GameObject turretMaster;
@@ -54,10 +55,17 @@ namespace Druid
             //survivorDef.bodyPrefab.GetComponent<CharacterBody>().AddBuff(RoR2.JunkContent.Buffs.IgnoreFallDamage); //Immune to fall damage
             DruidContentPack.bodyPrefabs.Add(new GameObject[] { survivorDef.bodyPrefab });
 
-            //Skills
+            //Primary Skills
             InitHealingBomb();
+            InitPiercingThorn();
+
+            //Secondary Skills
             InitSummonTurret();
+
+            //Utility Skills
             InitTeleport();
+
+            //Special Skills
             InitSummon();
 
             //Skill Families
@@ -82,6 +90,16 @@ namespace Druid
 
             DruidContentPack.entityStateTypes.Add(new System.Type[] { typeof(Druid.EntityStates.FireHealingBomb) });
             DruidContentPack.entityStateConfigurations.Add(new EntityStateConfiguration[] { DruidBundle.LoadAsset<EntityStateConfiguration>("Druid.EntityStates.FireHealingBomb") });
+        }
+
+        private static void InitPiercingThorn()
+        {
+            piercingThornProjectile = DruidBundle.LoadAsset<GameObject>("PiercingThornProjectile");
+            piercingThornProjectile.layer = LayerIndex.projectile.intVal;
+            DruidContentPack.projectilePrefabs.Add(new GameObject[] { piercingThornProjectile });
+
+            DruidContentPack.entityStateTypes.Add(new System.Type[] { typeof(Druid.EntityStates.FirePiercingThorn) });
+            DruidContentPack.entityStateConfigurations.Add(new EntityStateConfiguration[] { DruidBundle.LoadAsset<EntityStateConfiguration>("Druid.EntityStates.FirePiercingThorn") });
         }
 
         private static void InitSummonTurret()

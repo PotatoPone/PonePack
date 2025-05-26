@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 472562032
+CRC: 1861737140
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f7749fdac20b6346ea8b5660f7b45773
+    Hash: 42a2ea3fa60c1b20d063a1e82a52db08
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 45b414d7660c0fa6123425b092c7413d
+    Hash: 19db08a61e6bfd8d548ab65c1376d7c7
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -39,6 +39,8 @@ ClassTypes:
   Script: {fileID: 1143142494, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1783796254, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -96,6 +98,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -365436499, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: -1294804675, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: -202159943, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1792105662, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -126,6 +130,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -270136354, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: -899414464, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: -1819008361, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 717380117, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -141,6 +147,8 @@ ClassTypes:
   Script: {fileID: -1627637702, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 306635731, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1255927399, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1881990681, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -210,9 +218,13 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.Networking.NetworkSceneId
 Assets:
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/TurretMaster.prefab
+- Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Model/animDruidTurret.controller
 - Assets/PotatoPone/Druid/Assets/DruidCameraParams.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/TurretProjectileGhost.prefab
+- Assets/PotatoPone/Druid/Assets/Skills/PiercingThorn/Druid.EntityStates.FirePiercingThorn.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Druid.EntityStates.DruidTurret.DeathState.asset
+- Assets/PotatoPone/Druid/Assets/Model/Hazel Paladin.prefab
+- Assets/PotatoPone/Druid/Assets/Skins/DefaultSkinDef.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Druid.EntityStates.FireSummonTurret.asset
 - Assets/PotatoPone/Druid/Assets/Skills/skillDruidTeleport.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/physmatTurretProjectile.physicMaterial
@@ -220,8 +232,11 @@ Assets:
 - Assets/PotatoPone/Druid/Assets/Skills/sfDruidPrimary.asset
 - Assets/PotatoPone/Druid/Assets/Skills/skillSummonTurret.asset
 - Assets/PotatoPone/Druid/Assets/Skills/HealingBomb/HealingBombProjectile.prefab
+- Assets/PotatoPone/Druid/Assets/Skills/PiercingThorn/PiercingThornGhost.prefab
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Druid.EntityStates.DruidTurret.FireTurret.asset
+- Assets/PotatoPone/Druid/Assets/Model/Hazel Paladin Export Test.fbx
 - Assets/PotatoPone/Druid/Assets/Skills/skillHazelSpecial.asset
+- Assets/PotatoPone/Druid/Assets/Skills/skillPiercingThorn.asset
 - Assets/PotatoPone/Druid/Assets/DruidDisplay.prefab
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Druid.EntityStates.DruidTurret.SpawnState.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Model/mdlPlantTurret.prefab
@@ -236,12 +251,12 @@ Assets:
 - Assets/PotatoPone/Druid/Assets/Skills/Teleport/Druid.EntityStates.TeleportState.asset
 - Assets/PotatoPone/Druid/Assets/Skills/HealingBomb/HealingBombGhost.prefab
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/TurretBody.prefab
-- Assets/PotatoPone/Druid/Assets/Skills/skillFireHealingBomb.asset
+- Assets/PotatoPone/Druid/Assets/Skills/skillHealingBomb.asset
 - Assets/PotatoPone/Druid/Assets/Model/mdlDruid.prefab
 - Assets/PotatoPone/Druid/Assets/Skills/sfDruidUtility.asset
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/TurretProjectile.prefab
 - Assets/PotatoPone/Druid/Assets/Model/mdlDruidDisplay.prefab
-- Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/Model/animDruidTurret.controller
+- Assets/PotatoPone/Druid/Assets/Skills/PiercingThorn/PiercingThornProjectile.prefab
 - Assets/PotatoPone/Druid/Assets/DruidBody.prefab
 - Assets/PotatoPone/Druid/Assets/Skills/SummonTurret/Turret/FireTurret.asset
 Dependencies: []
